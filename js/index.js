@@ -1,11 +1,24 @@
 const createValueBarGraph = require('./createValueBarGraph')
-  , createPercentageAreaGraph = require('./createPercentageAreaGraph')
+    , createPercentageAreaGraph = require('./createPercentageAreaGraph')
+    , moment = require('moment')
+let spreadSheetData = [ ]
+  , formattedData = { }
 
 function getData () {
   $.ajax({
     url: '/data'
   , success: function (body) {
-      console.log(body)
+      console.log(body.values)
+      spreadSheetData = body.values
+      let currentMonth = 'December 2016'//moment().format('MMMM YYYY')
+        , currentMonthIndex = spreadSheetData[0].indexOf(currentMonth)
+        , range = 6
+
+      // Prevents going out of bounds
+      if (currentMonthIndex < range) range = currentMonthIndex
+      console.log(currentMonthIndex)
+      console.log(spreadSheetData[0].slice(1, range))
+      //console.log(moment('August 2016').format('MMM YY'))
     }
   })
   repopulate()

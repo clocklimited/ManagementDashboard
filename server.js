@@ -17,7 +17,7 @@ app.get('/data', function (req, res) {
     spreadsheetId: '1vYkw_63Ak4tGoBvD1uT_hDxSMEWmgydyPLg2nHr9FPc'
     , range: 'Data'
   }, function sheetReady (err, sheet) {
-    console.log(err)
+    if (err) console.log(err)
 
     res.status(200).json(sheet)
   })
