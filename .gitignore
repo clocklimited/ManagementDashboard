@@ -1,0 +1,53 @@
+# Sublime
+*.sublime-project
+*.sublime-workspace
+
+# Windows
+Thumbs.db
+
+# Vim
+.*.sw[a-z]
+*.un~i
+
+# Idea
+.idea
+
+# OsX
+.DS_Store
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Node modules
+node_modules
+
+# Npm
+npm-debug.log
+
+# Project Specific
+coverage/*
+admin/public/js/build/*
+admin/public/css/*.css
+admin/static-file-map.json
+admin/config.json
+admin/public/js/app/components.js
+
+site/static-file-map.json
+site/assets/js/build
+site/assets/css/**/*.css
+
+site/assets/stylus/*/sprite/*
+
+site/assets/img/**/*._t_
+site/assets/img/*/sprite/generated/*
+
+config-*.json
+**/config-*.json
+!**/config-whitelist.json
+
+.settings.json
+data
+site/assets/robots.txt
+
+src/bundle.js

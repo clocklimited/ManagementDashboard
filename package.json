@@ -1,0 +1,32 @@
+{
+  "name": "managementdashboard",
+  "version": "0.0.0",
+  "description": "Clock Management Dashboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "watchify js/index.js -d -o src/bundle.js -v"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clocklimited/ManagementDashboard.git"
+  },
+  "author": "Jack Burgess <jack.burgess@clock.co.uk>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/clocklimited/ManagementDashboard/issues"
+  },
+  "homepage": "https://github.com/clocklimited/ManagementDashboard#readme",
+  "devDependencies": {
+    "browserify": "^13.1.0",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "aes": "^0.1.0",
+    "edit-google-spreadsheet": "^0.2.21",
+    "express": "^4.14.0",
+    "google-auth-library": "^0.9.8",
+    "google-spreadsheets": "^0.5.1",
+    "googleapis": "^12.0.0"
+  }
+}

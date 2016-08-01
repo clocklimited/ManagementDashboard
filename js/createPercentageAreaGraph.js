@@ -1,4 +1,4 @@
-window.createPercentageAreaGraph = function(containerId, w, h, dataSrc, domain) {
+module.exports = function (containerId, w, h, dataSrc, domain) {
 
   if (!domain) {
     domain = [0, 1]
@@ -23,31 +23,31 @@ window.createPercentageAreaGraph = function(containerId, w, h, dataSrc, domain) 
       .orient('left')
       .tickFormat(d3.format('.0%'))
     , area = d3.svg.area()
-      .x(function(d) { return x(d.date) })
+      .x(function (d) { return x(d.date) })
       .y0(height)
-      .y1(function(d) { return y(d.value) })
+      .y1(function (d) { return y(d.value) })
     , svg = d3.select(containerId).append('svg')
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
     .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-  d3.tsv(dataSrc, function(error, data) {
+  d3.tsv(dataSrc, function (error, data) {
 
-      var labels = d3.keys(data[0]).filter(function(key) { return key !== 'date' })
+      var labels = d3.keys(data[0]).filter(function (key) { return key !== 'date' })
 
-      data.forEach(function(d) {
+      data.forEach(function (d) {
         d.date = parseDate(d.date)
       })
 
-      var md = labels.map(function(name) {
+      var md = labels.map(function (name) {
         return {
-          name: name,
-          values: data.map(function(d) { return { date: d.date, value: +d[name] }})
+          name: name
+          , values: data.map(function (d) { return { date: d.date, value: +d[name] }})
         }
       })
 
-      x.domain(d3.extent(data, function(d) { return d.date }))
+      x.domain(d3.extent(data, function (d) { return d.date }))
       y.domain(domain)
       //console.log(md)
       var values = svg.selectAll('.values')
@@ -55,8 +55,8 @@ window.createPercentageAreaGraph = function(containerId, w, h, dataSrc, domain) 
         .enter().append('g')
 
       values.append('path')
-          .attr('class', function(d) { return classScale(d.name) })
-          .attr('d', function(d) { return area(d.values) })
+          .attr('class', function (d) { return classScale(d.name) })
+          .attr('d', function (d) { return area(d.values) })
 
       svg.append('g')
           .attr('class', 'x axis')
@@ -77,7 +77,7 @@ window.createPercentageAreaGraph = function(containerId, w, h, dataSrc, domain) 
         .data(labels.slice().reverse())
         .enter().append('g')
           .attr('class', 'legend')
-          .attr('transform', function(d, i) { return 'translate(0,' + i * 20 + ')' })
+          .attr('transform', function (d, i) { return 'translate(0,' + i * 20 + ')' })
 
       legend.append('rect')
           .attr('x', width - 10)
@@ -90,7 +90,7 @@ window.createPercentageAreaGraph = function(containerId, w, h, dataSrc, domain) 
           .attr('y', 5)
           .attr('dy', '.35em')
           .style('text-anchor', 'end')
-          .text(function(d) { return d.charAt(0).toUpperCase() + d.slice(1) })
+          .text(function (d) { return d.charAt(0).toUpperCase() + d.slice(1) })
     }
   })
 }
