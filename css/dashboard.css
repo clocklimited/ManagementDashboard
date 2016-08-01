@@ -1,0 +1,68 @@
+body {
+  font-family: 'LatoRegular', Arial, sans-serif;
+  letter-spacing: 0;
+  font-size: 12px;
+  background: white;
+  color: #666666;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'LatoBold', Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: 3.5em;
+}
+h2 {
+  color: #666666;
+  font-size: 3em;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: white;
+  shape-rendering: crispEdges;
+}
+
+.legend {
+  x: 0;
+  y: 0;
+}
+
+text {
+  fill: white;
+}
+.area1, .bar1 {
+  fill: white;
+}
+
+.area2, .bar2 {
+  fill: #333333;
+}
+
+.row h3 {
+  margin-left: 10px;
+  color: white;
+  margin-bottom: 0px;
+}
+.row .graph {
+  margin: 0px;
+  display: inline-block;
+  background: #222222;
+}
+#production.row .graph {
+  background: green;
+}
+#sales-section.row .graph {
+  background: red;
+}
+#finance.row .graph {
+  background: #666666;
+}
+#human-resources.row .graph {
+  background: #770077;
+}
+#marketing.row .graph {
+  background: #0000aa;
+}
