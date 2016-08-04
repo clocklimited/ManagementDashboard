@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 module.exports = function createTargetLineGraph (containerId, w, h, data) {
 
   var margin = {top: 20, right: 20, bottom: 30, left: 40}
@@ -6,29 +8,36 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
 
   var parseDate = d3.time.format('%b %Y').parse
 
-  var x = d3.time.scale().range([0, width])
-  var y = d3.scale.linear().range([height, 0])
+  var x = d3.time.scale()
+      .range([0, width])
+  var y = d3.scale.linear()
+      .range([height, 0])
 
-  var xAxis = d3.svg.axis().scale(x)
-    .orient('bottom').ticks(5)
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient('bottom')
+      .ticks(5)
+      .tickFormat(d3.time.format('%b %y'))
 
-  var yAxis = d3.svg.axis().scale(y)
-    .orient('left').ticks(5)
+  var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient('left')
+      .tickFormat(d3.format('.2s'))
 
-  var valueline = d3.svg.line()
-    .x(function (d) { return x(d.date) })
-    .y(function (d) { return y(d.target) })
+  var targetLine = d3.svg.line()
+      .x(function (d) { return x(d.date) })
+      .y(function (d) { return y(d.target) })
 
-  var valueline2 = d3.svg.line()
-    .x(function (d) { return x(d.date) })
-    .y(function (d) { return y(d.value) })
+  var valueLine = d3.svg.line()
+      .x(function (d) { return x(d.date) })
+      .y(function (d) { return y(d.value) })
 
   var svg = d3.select(containerId)
-    .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-    .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+      .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+      .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
   // Get the data
   // close = target
@@ -44,14 +53,15 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
   x.domain(d3.extent(data, function (d) { return d.date }))
   y.domain([0, d3.max(data, function (d) { return Math.max(d.target, d.value) })])
 
-  svg.append('path')    // Add the valueline path.
+  svg.append('path')    // Add the targetLine path.
     .attr('class', 'line')
-    .attr('d', valueline(data))
+    .style('stroke', 'black')
+    .attr('d', targetLine(data))
 
-  svg.append('path')    // Add the valueline2 path.
+  svg.append('path')    // Add the valueLine path.
     .attr('class', 'line')
-    .style('stroke', 'red')
-    .attr('d', valueline2(data))
+    .style('stroke', 'white')
+    .attr('d', valueLine(data))
 
   svg.append('g')
     .attr('class', 'x axis')

@@ -30,6 +30,10 @@ h2 {
   y: 0;
 }
 
+path {
+  fill: none;
+}
+
 text {
   fill: white;
 }
