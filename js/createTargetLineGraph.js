@@ -1,5 +1,3 @@
-const moment = require('moment')
-
 module.exports = function createTargetLineGraph (containerId, w, h, data) {
 
   var margin = {top: 20, right: 20, bottom: 30, left: 40}
@@ -39,9 +37,6 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
       .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-  // Get the data
-  // close = target
-  // open = value
   data.forEach(function (d) {
     d.date = parseDate(d.date)
     d.target = +d.target
@@ -53,12 +48,12 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
   x.domain(d3.extent(data, function (d) { return d.date }))
   y.domain([0, d3.max(data, function (d) { return Math.max(d.target, d.value) })])
 
-  svg.append('path')    // Add the targetLine path.
+  svg.append('path')
     .attr('class', 'line')
     .style('stroke', 'black')
     .attr('d', targetLine(data))
 
-  svg.append('path')    // Add the valueLine path.
+  svg.append('path')
     .attr('class', 'line')
     .style('stroke', 'white')
     .attr('d', valueLine(data))

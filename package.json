@@ -28,5 +28,9 @@
     "google-spreadsheets": "^0.5.1",
     "googleapis": "^12.0.0",
     "moment": "^2.14.1"
+  },
+  "engines": {
+    "node": "^4.4.7",
+    "npm": "^2.15.9"
   }
 }

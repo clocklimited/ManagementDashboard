@@ -18,6 +18,9 @@ h2 {
   color: #666666;
   font-size: 3em;
 }
+h3 {
+  font-size: 2em;
+}
 .axis path,
 .axis line {
   fill: none;
@@ -32,18 +35,11 @@ h2 {
 
 path {
   fill: none;
+  stroke-width: 2px;
 }
 
 text {
   fill: white;
-}
-
-.line1 {
-  color: white;
-}
-
-.line2 {
-  color: red;
 }
 
 .area1, .bar1 {
@@ -64,6 +60,16 @@ text {
   display: inline-block;
   background: #222222;
 }
+
+span {
+  font-size: .75em;
+
+  color: black;
+  background-color: white;
+  border-radius: 8px;
+  padding: 0px 5px 0px 5px;
+}
+
 #production.row .graph {
   background: green;
 }
