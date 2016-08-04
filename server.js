@@ -14,15 +14,28 @@ app.use(express.static(__dirname))
 
 app.get('/data', function (req, res) {
   SheetsHelper.service.spreadsheets.values.get({
-    spreadsheetId: '1vYkw_63Ak4tGoBvD1uT_hDxSMEWmgydyPLg2nHr9FPc'
+    spreadsheetId: '1Pt0CFzEwJx-AYT0H98OKwoDkmpPw6xvYujc04eo2e7o'
+    // WORKING SHEET - '1vYkw_63Ak4tGoBvD1uT_hDxSMEWmgydyPLg2nHr9FPc'
     , range: 'Data'
   }, function sheetReady (err, sheet) {
     if (err) console.log(err)
+    //console.log(sheet)
+    res.status(200).json(sheet)
+  })
+})
 
+app.get('/targets', function (req, res) {
+  SheetsHelper.service.spreadsheets.values.get({
+    spreadsheetId: '1Pt0CFzEwJx-AYT0H98OKwoDkmpPw6xvYujc04eo2e7o'
+    // WORKING SHEET - '1vYkw_63Ak4tGoBvD1uT_hDxSMEWmgydyPLg2nHr9FPc'
+    , range: 'Targets'
+  }, function sheetReady (err, sheet) {
+    if (err) console.log(err)
+    //console.log(sheet)
     res.status(200).json(sheet)
   })
 })
 
 app.listen(port, function () {
-  console.log('listening on port %d', port)
+  console.log('Listening on port %d', port)
 })

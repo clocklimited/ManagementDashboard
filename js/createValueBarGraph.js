@@ -1,4 +1,4 @@
-module.exports = function createValueBarGraph (containerId, w, h, dataSrc) {
+module.exports = function createValueBarGraph (containerId, w, h, dataSrc, dataPrepped) {
 
   var margin = {top: 20, right: 20, bottom: 30, left: 40}
     , width = w - margin.left - margin.right
@@ -31,6 +31,8 @@ module.exports = function createValueBarGraph (containerId, w, h, dataSrc) {
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
   d3.tsv(dataSrc, function (error, data) {
+    data = dataPrepped || data
+    // console.log(data)
     var labels = d3.keys(data[0]).filter(function (key) { return key !== 'date' })
 
     data.forEach(function (d) {
