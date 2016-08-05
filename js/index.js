@@ -6,10 +6,10 @@ const createValueBarGraph = require('./createValueBarGraph')
 
 let spreadSheetData = [ ]
   , data = {
-      dates: [ ]
-    , revenue: [ ]
-    , profit: [ ]
-    , revenueVsTarget: {
+  //     dates: [ ]
+  //   , revenue: [ ]
+  //   , profit: [ ]
+     revenueVsTarget: {
         date: [ ]
       , target: [ ]
       , value: [ ]
@@ -19,18 +19,23 @@ let spreadSheetData = [ ]
       , target: [ ]
       , value: [ ]
     }
-    , winRate: [ ]
-    , closedDeals: [ ]
-    , leads: [ ]
-    , pipeline: [ ]
+    , revenuePerHeadVsTarget: {
+        date: [ ]
+      , target: [ ]
+      , value: [ ]
+    }
+  //   , winRate: [ ]
+  //   , closedDeals: [ ]
+  //   , leads: [ ]
+  //   , pipeline: [ ]
     , tickets: {
           opened: [ ]
         , closed: [ ]
       }
-    , activeProjects: [ ]
-    , headCount: [ ]
-    , holiday: [ ]
-    , sickDays: [ ]
+  //   , headCount: [ ]
+  //   , revenuePerHead: [ ]
+  //   , holiday: [ ]
+  //   , sickDays: [ ]
     , costs: {
         staff: [ ]
       , total: [ ]
@@ -38,6 +43,7 @@ let spreadSheetData = [ ]
     , target: {
         revenue: 0
       , profit: 0
+      , revenuePerHead: 0
       }
   }
   , spreadSheetTargets = [ ]
@@ -57,21 +63,30 @@ function getSpreadsheetData () {
 
       data.dates = spreadSheetData[0].slice(start, end)
       data.dates = data.dates.map((date) => moment(date, 'MMMM YYYY').format('MMM YY'))
+      // FINANCE
       data.revenue = format(data.dates, spreadSheetData[pos.REVENUE].slice(start, end))
       data.profit = format(data.dates, spreadSheetData[pos.PROFIT].slice(start, end))
-      data.headCount = format(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
-      data.pipeline = format(data.dates, spreadSheetData[pos.PIPELINE].slice(start, end))
-      data.closedDeals = format(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
-      data.sickDays = format(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
-      data.tickets.opened = spreadSheetData[pos.TICKETS_OPENED].slice(start, end)
-      data.tickets.closed = spreadSheetData[pos.TICKETS_CLOSED].slice(start, end)
-      data.tickets = formatDual(data.dates, data.tickets)
-      data.winRate = format(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
-      data.holiday = format(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
       data.costs.staff = spreadSheetData[pos.COSTS_STAFF].slice(start, end)
       data.costs.total = spreadSheetData[pos.COSTS_TOTAL].slice(start, end)
       data.costs = formatDual(data.dates, data.costs)
+      data.annuity = format(data.dates, spreadSheetData[pos.ANNUITY].slice(start, end))
+      data.revenuePerHead = format(data.dates, spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
+      // SALES
+      data.winRate = format(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
+      data.closedDeals = format(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
       data.leads = format(data.dates, spreadSheetData[pos.LEADS].slice(start, end))
+      data.pipeline = format(data.dates, spreadSheetData[pos.PIPELINE].slice(start, end))
+      // PRODUCTION
+      data.tickets.opened = spreadSheetData[pos.TICKETS_OPENED].slice(start, end)
+      data.tickets.closed = spreadSheetData[pos.TICKETS_CLOSED].slice(start, end)
+      data.tickets = formatDual(data.dates, data.tickets)
+      // HR
+      data.headCount = format(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
+      data.sickDays = format(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
+      data.holiday = format(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
+
+      data.staffSatisfaction = format(data.dates, spreadSheetData[pos.STAFF_SATISFACTION].slice(start, end))
+      data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
 
       console.log('Formatted Data', data)
       getSpreadsheetTargets()
@@ -87,8 +102,10 @@ function getSpreadsheetTargets () {
       spreadSheetTargets = body.values
       data.target.revenue = spreadSheetTargets[1][1]
       data.target.profit = spreadSheetTargets[2][1]
+      data.target.revenuePerHead = spreadSheetTargets[5][1]
       data.revenueVsTarget = formatItemVsTarget(data.dates, data.target.revenue, data.revenue)
       data.profitVsTarget = formatItemVsTarget(data.dates, data.target.profit, data.profit)
+      data.revenuePerHeadVsTarget = formatItemVsTarget(data.dates, data.target.revenuePerHead, data.revenuePerHead)
       repopulate()
       calculateStatus()
     }
@@ -103,8 +120,11 @@ function repopulate () {
   createValueBarGraph('#revenue', width, height, data.revenue)
   createValueBarGraph('#profit', width, height, data.profit)
   createValueBarGraph('#costs', width, height, data.costs)
+  createValueBarGraph('#annuity', width, height, data.annuity)
+  createValueBarGraph('#revenue-per-head', width, height, data.revenuePerHead)
   createTargetLineGraph('#revenue-vs-target', width, height, data.revenueVsTarget)
   createTargetLineGraph('#profit-vs-target', width, height, data.profitVsTarget)
+  createTargetLineGraph('#rph-vs-target', width, height, data.revenuePerHeadVsTarget)
 
   // Sales
   createPercentageAreaGraph('#win-rate', width, height, data.winRate)
@@ -124,102 +144,72 @@ function repopulate () {
 }
 
 function calculateStatus () {
-  let diffArrCol
-
-  // [difference, arrow, colour] = diffArrowColourCalculate(data)
-
   // Revenue
-  diffArrCol = diffArrowColourCalculate(data.revenue)
-  $('#revenue-status')
-    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
-    .css('color', diffArrCol[2])
+  addStatus('#revenue-status', data.revenue, 'last month')
 
   // Profit
-  diffArrCol = diffArrowColourCalculate(data.profit)
-  $('#profit-status')
-    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
-    .css('color', diffArrCol[2])
+  addStatus('#profit-status', data.profit, 'last month')
+
+  // Annuity
+  addStatus('#annuity-status', data.annuity, 'last month')
+
+  // Revenue Per Head
+  addStatus('#revenue-per-head-status', data.revenuePerHead, 'last month')
 
   // Revenue vs Target
-  diffArrCol = diffArrowColourCalculateTargets(data.revenueVsTarget)
-  $('#revenue-vs-target-status')
-    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on target')
-    .css('color', diffArrCol[2])
+  addStatus('#revenue-vs-target-status', data.revenueVsTarget, 'target')
 
   // Profit vs Target
-  diffArrCol = diffArrowColourCalculateTargets(data.profitVsTarget)
-  $('#profit-vs-target-status')
-    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on target')
-    .css('color', diffArrCol[2])
+  addStatus('#profit-vs-target-status', data.profitVsTarget, 'target')
+
+  // RPH vs Target
+  addStatus('#rph-vs-target-status', data.revenuePerHeadVsTarget, 'target')
 
   // Closed Deals
-  diffArrCol = diffArrowColourCalculate(data.closedDeals)
-  $('#closed-deals-status')
-    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
-    .css('color', diffArrCol[2])
+  addStatus('#closed-deals-status', data.closedDeals, 'last month')
 
   // Leads
-  diffArrCol = diffArrowColourCalculate(data.leads)
-  $('#leads-status')
-    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
-    .css('color', diffArrCol[2])
+  addStatus('#leads-status', data.leads, 'last month')
 
   // Win Rate
-  diffArrCol = diffArrowColourCalculate(data.winRate)
-  $('#win-rate-status')
-    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
-    .css('color', diffArrCol[2])
+  addStatus('#win-rate-status', data.winRate, 'last month')
 
   // Pipeline
-  diffArrCol = diffArrowColourCalculate(data.pipeline)
-  $('#pipeline-status')
-    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
-    .css('color', diffArrCol[2])
+  addStatus('#pipeline-status', data.pipeline, 'last month')
 }
 
-function diffArrowColourCalculate (data) {
+function addStatus (target, data, vs) {
   let length = data.length
-    , current = data[length - 1].value
-    , previous = data[length - 2].value
-    , difference = ((previous - current) / previous) * 100
+    , current
+    , previous
+    , difference
     , arrow
     , colour
 
-    if (difference === 0) {
-      arrow = '&#8212;' // Dash
-      colour = 'black'
-    } else if (difference > 0) {
-      arrow = '&#8593;' // Up arrow
-      colour = 'green'
-    } else if (difference < 0) {
-      arrow = '&#8595;' // Down arrow
-      colour = 'red'
-    }
+  if (vs !== 'target') {
+    current = data[length - 1].value
+    previous = data[length - 2].value
+    difference = ((current - previous) / Math.abs(previous)) * 100
+  } else {
+    let currentMonthData = data[length - 1]
+      , revenue = currentMonthData.value
+      , target = currentMonthData.target
+    difference = (revenue / target) * 100 - 100
+  }
 
-    return [difference.toFixed(2), arrow, colour]
-}
-
-function diffArrowColourCalculateTargets (data) {
-  let length = data.length
-    , currentMonthData = data[length - 1]
-    , revenue = currentMonthData.value
-    , target = currentMonthData.target
-    , difference = (revenue / target) * 100 - 100
-    , arrow
-    , colour
-
-    if (difference === 0) {
-      arrow = '&#8212;' // Dash
-      colour = 'black'
-    } else if (difference > 0) {
-      arrow = '&#8593;' // Up arrow
-      colour = 'green'
-    } else if (difference < 0) {
-      arrow = '&#8595;' // Down arrow
-      colour = 'red'
-    }
-
-    return [difference.toFixed(2), arrow, colour]
+  if (difference === 0) {
+    arrow = '&#8212;' // Dash
+    colour = 'black'
+  } else if (difference > 0) {
+    arrow = '&#x25B2;' // Up arrow
+    colour = 'rgb(10, 220, 10)'
+  } else if (difference < 0) {
+    arrow = '&#x25BC;' // Down arrow
+    colour = 'rgb(160, 8, 8)'
+  }
+  $(target)
+    .html(arrow + ' ' + difference.toFixed(2) + '% on ' + vs)
+    .css('color', colour)
 }
 
 function format (dates, data) {

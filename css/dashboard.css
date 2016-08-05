@@ -21,6 +21,12 @@ h2 {
 h3 {
   font-size: 2em;
 }
+
+span {
+  color: black;
+  padding: 0px 5px 0px 5px;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -60,30 +66,17 @@ text {
   display: inline-block;
   background: #222222;
 }
-
-span {
-  font-size: .75em;
-
-  color: black;
-  background-color: white;
-  border-radius: 8px;
-  padding: 0px 5px 0px 5px;
+#finance.row .graph {
+  background: #999999;
 }
-
+#sales-section.row .graph {
+  background: #0B2F3D;
+}
 #production.row .graph {
   background: green;
 }
-#sales-section.row .graph {
-  background: red;
-}
-#finance.row .graph {
-  background: #666666;
-}
 #human-resources.row .graph {
   background: #770077;
-}
-#marketing.row .graph {
-  background: #0000aa;
 }
 
 .d3-tip {
