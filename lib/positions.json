@@ -1,0 +1,22 @@
+{
+    "DATES": 0
+  , "REVENUE": 1
+  , "PROFIT": 2
+  , "ANNUITY": 3
+  , "HEAD_COUNT": 4
+  , "PIPELINE": 5
+  , "CLOSED_DEALS": 6
+  , "STAFF_TURNOVER": 7
+  , "REVENUE_PER_HEAD": 8
+  , "HOSTING_UPTIME": 9
+  , "HOSTING_INCIDENTS": 10
+  , "SICK_DAYS": 11
+  , "TICKETS_OPENED": 12
+  , "TICKETS_CLOSED": 13
+  , "STAFF_SATISFACTION": 14
+  , "WIN_RATE": 15
+  , "HOLIDAY": 16
+  , "COSTS_STAFF": 17
+  , "COSTS_TOTAL": 18
+  , "LEADS": 19
+  }

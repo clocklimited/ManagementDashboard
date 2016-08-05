@@ -2,6 +2,7 @@ const createValueBarGraph = require('./createValueBarGraph')
     , createPercentageAreaGraph = require('./createPercentageAreaGraph')
     , createTargetLineGraph = require('./createTargetLineGraph')
     , moment = require('moment')
+    , pos = require('../lib/positions.json')
 
 let spreadSheetData = [ ]
   , data = {
@@ -54,24 +55,25 @@ function getSpreadsheetData () {
         , start = currentMonthIndex <= range ? 1 : currentMonthIndex - range
         , end = currentMonthIndex
 
-      console.log(start, end)
-      data.dates = spreadSheetData[0].slice(start, end).map((x) => moment(x, 'MMMM YYYY').format('MMM YY'))
-      data.revenue = formatDataD3(data.dates, spreadSheetData[1].slice(start, end))
-      data.profit = formatDataD3(data.dates, spreadSheetData[2].slice(start, end))
-      data.headCount = formatDataD3(data.dates, spreadSheetData[4].slice(start, end))
-      data.pipeline = formatDataD3(data.dates, spreadSheetData[5].slice(start, end))
-      data.closedDeals = formatDataD3(data.dates, spreadSheetData[6].slice(start, end))
-      data.sickDays = formatDataD3(data.dates, spreadSheetData[11].slice(start, end))
-      data.tickets.opened = spreadSheetData[12].slice(start, end)
-      data.tickets.closed = spreadSheetData[13].slice(start, end)
-      data.tickets = formatDualDataD3(data.dates, data.tickets)
-      data.winRate = formatDataD3(data.dates, spreadSheetData[15].slice(start, end))
-      data.holiday = formatDataD3(data.dates, spreadSheetData[16].slice(start, end))
-      data.costs.staff = spreadSheetData[17].slice(start, end)
-      data.costs.total = spreadSheetData[18].slice(start, end)
-      data.costs = formatDualDataD3(data.dates, data.costs)
-      data.leads = formatDataD3(data.dates, spreadSheetData[19].slice(start, end))
-      console.log(data)
+      data.dates = spreadSheetData[0].slice(start, end)
+      data.dates = data.dates.map((date) => moment(date, 'MMMM YYYY').format('MMM YY'))
+      data.revenue = format(data.dates, spreadSheetData[pos.REVENUE].slice(start, end))
+      data.profit = format(data.dates, spreadSheetData[pos.PROFIT].slice(start, end))
+      data.headCount = format(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
+      data.pipeline = format(data.dates, spreadSheetData[pos.PIPELINE].slice(start, end))
+      data.closedDeals = format(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
+      data.sickDays = format(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
+      data.tickets.opened = spreadSheetData[pos.TICKETS_OPENED].slice(start, end)
+      data.tickets.closed = spreadSheetData[pos.TICKETS_CLOSED].slice(start, end)
+      data.tickets = formatDual(data.dates, data.tickets)
+      data.winRate = format(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
+      data.holiday = format(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
+      data.costs.staff = spreadSheetData[pos.COSTS_STAFF].slice(start, end)
+      data.costs.total = spreadSheetData[pos.COSTS_TOTAL].slice(start, end)
+      data.costs = formatDual(data.dates, data.costs)
+      data.leads = format(data.dates, spreadSheetData[pos.LEADS].slice(start, end))
+
+      console.log('Formatted Data', data)
       getSpreadsheetTargets()
     }
   })
@@ -94,7 +96,7 @@ function getSpreadsheetTargets () {
 }
 
 function repopulate () {
-  var width = 480//320
+  let width = 480//320
     , height = 300//200
 
   // Finance
@@ -220,7 +222,7 @@ function diffArrowColourCalculateTargets (data) {
     return [difference.toFixed(2), arrow, colour]
 }
 
-function formatDataD3 (dates, data) {
+function format (dates, data) {
   let formatted = [ ]
 
   data.forEach((item, index) => {
@@ -230,7 +232,7 @@ function formatDataD3 (dates, data) {
   return formatted
 }
 
-function formatDualDataD3 (dates, data) {
+function formatDual (dates, data) {
   let formatted = [ ]
     , keys = Object.keys(data)
 

@@ -3,7 +3,7 @@ module.exports = function (containerId, w, h, data, domain) {
   if (!domain) {
     domain = [0, 1]
   }
-  var margin = {top: 20, right: 30, bottom: 30, left: 50}
+  let margin = {top: 20, right: 30, bottom: 30, left: 50}
     , width = w - margin.left - margin.right
     , height = h - margin.top - margin.bottom
     , parseDate = d3.time.format('%b %Y').parse
@@ -26,13 +26,14 @@ module.exports = function (containerId, w, h, data, domain) {
         .scale(y)
         .orient('left')
         .tickFormat(d3.format('.0%'))
-    , area = d3.svg.area()
 
+    , area = d3.svg.area()
         .x((d) => x(d.date))
         .y0(height)
         .y1((d) => y(d.value))
 
-    , svg = d3.select(containerId).append('svg')
+    , svg = d3.select(containerId)
+      .append('svg')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
       .append('g')

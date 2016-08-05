@@ -1,6 +1,6 @@
 module.exports = function createTargetLineGraph (containerId, w, h, data) {
 
-  var margin = {top: 20, right: 20, bottom: 30, left: 40}
+  let margin = {top: 20, right: 20, bottom: 30, left: 40}
     , width = w - margin.left - margin.right
     , height = h - margin.top - margin.bottom
 
