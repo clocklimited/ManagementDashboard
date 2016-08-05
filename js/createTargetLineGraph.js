@@ -4,49 +4,52 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
     , width = w - margin.left - margin.right
     , height = h - margin.top - margin.bottom
 
-  var parseDate = d3.time.format('%b %Y').parse
+    , parseDate = d3.time.format('%b %Y').parse
 
-  var x = d3.time.scale()
-      .range([0, width])
-  var y = d3.scale.linear()
-      .range([height, 0])
+    , x = d3.time.scale()
+        .range([0, width])
+    , y = d3.scale.linear()
+        .range([height, 0])
 
-  var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient('bottom')
-      .ticks(5)
-      .tickFormat(d3.time.format('%b %y'))
+    , xAxis = d3.svg.axis()
+        .scale(x)
+        .orient('bottom')
+        .ticks(5)
+        .tickFormat(d3.time.format('%b %y'))
 
-  var yAxis = d3.svg.axis()
-      .scale(y)
-      .orient('left')
-      .tickFormat(d3.format('.2s'))
+    , yAxis = d3.svg.axis()
+        .scale(y)
+        .orient('left')
+        .tickFormat(d3.format('.2s'))
 
-  var targetLine = d3.svg.line()
-      .x(function (d) { return x(d.date) })
-      .y(function (d) { return y(d.target) })
+    , targetLine = d3.svg.line()
+        .x((d) => x(d.date))
+        .y((d) => y(d.target))
 
-  var valueLine = d3.svg.line()
-      .x(function (d) { return x(d.date) })
-      .y(function (d) { return y(d.value) })
+    , valueLine = d3.svg.line()
+        .x((d) => x(d.date))
+        .y((d) => y(d.value))
 
-  var svg = d3.select(containerId)
-      .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+    , svg = d3.select(containerId)
+        .append('svg')
+          .attr('width', width + margin.left + margin.right)
+          .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-  data.forEach(function (d) {
+  data.forEach((d) => {
     d.date = parseDate(d.date)
     d.target = +d.target
     d.value = +d.value
   })
 
-  console.log(data)
+  console.log('Target Line Graph', data)
   // Scale the range of the data
-  x.domain(d3.extent(data, function (d) { return d.date }))
-  y.domain([0, d3.max(data, function (d) { return Math.max(d.target, d.value) })])
+  x.domain(d3.extent(data, (d) => d.date))
+  y.domain([Math.min(0, d3.min(data, (d) => Math.min(d.target, d.value)))
+      , d3.max(data, (d) => Math.max(d.target, d.value))
+      ])
+    .nice()
 
   svg.append('path')
     .attr('class', 'line')
@@ -71,18 +74,4 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
       .attr('y', 6)
       .attr('dy', '.71em')
       .style('text-anchor', 'end')
-
-  // svg.append('text')
-  //   .attr('transform', 'translate(' + (width + 3) + ',' + y(data[0].value) + ')')
-  //   .attr('dy', '.35em')
-  //   .attr('text-anchor', 'start')
-  //   .style('fill', 'red')
-  //   .text('Open')
-
-  // svg.append('text')
-  //   .attr('transform', 'translate(' + (width + 3) + ',' + y(data[0].target) + ')')
-  //   .attr('dy', '.35em')
-  //   .attr('text-anchor', 'start')
-  //   .style('fill', 'steelblue')
-  //   .text('Close')
 }

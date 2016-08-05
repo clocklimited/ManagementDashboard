@@ -7,17 +7,21 @@ let spreadSheetData = [ ]
   , data = {
       dates: [ ]
     , revenue: [ ]
-    , costs: [ ]
+    , profit: [ ]
     , revenueVsTarget: {
         date: [ ]
       , target: [ ]
-      , revenue: [ ]
+      , value: [ ]
       }
+    , profitVsTarget: {
+        date: [ ]
+      , target: [ ]
+      , value: [ ]
+    }
     , winRate: [ ]
     , closedDeals: [ ]
     , leads: [ ]
     , pipeline: [ ]
-    , utilisation: [ ]
     , tickets: {
           opened: [ ]
         , closed: [ ]
@@ -26,8 +30,13 @@ let spreadSheetData = [ ]
     , headCount: [ ]
     , holiday: [ ]
     , sickDays: [ ]
+    , costs: {
+        staff: [ ]
+      , total: [ ]
+    }
     , target: {
         revenue: 0
+      , profit: 0
       }
   }
   , spreadSheetTargets = [ ]
@@ -36,7 +45,7 @@ function getSpreadsheetData () {
   return $.ajax({
     url: '/data'
   , success: function (body) {
-      console.log(body.values)
+      console.log('Data', body.values)
       spreadSheetData = body.values
       let currentMonth = 'October 2016'//moment().format('MMMM YYYY')
         , currentMonthIndex = spreadSheetData[0].indexOf(currentMonth)
@@ -47,16 +56,21 @@ function getSpreadsheetData () {
 
       console.log(start, end)
       data.dates = spreadSheetData[0].slice(start, end).map((x) => moment(x, 'MMMM YYYY').format('MMM YY'))
-      // ASSUMPTION: turnover = revenue
       data.revenue = formatDataD3(data.dates, spreadSheetData[1].slice(start, end))
+      data.profit = formatDataD3(data.dates, spreadSheetData[2].slice(start, end))
       data.headCount = formatDataD3(data.dates, spreadSheetData[4].slice(start, end))
       data.pipeline = formatDataD3(data.dates, spreadSheetData[5].slice(start, end))
       data.closedDeals = formatDataD3(data.dates, spreadSheetData[6].slice(start, end))
       data.sickDays = formatDataD3(data.dates, spreadSheetData[11].slice(start, end))
       data.tickets.opened = spreadSheetData[12].slice(start, end)
       data.tickets.closed = spreadSheetData[13].slice(start, end)
-      data.tickets = formatTicketDataD3(data.dates, data.tickets)
-      data.leads = formatDataD3(data.dates, spreadSheetData[16].slice(start, end))
+      data.tickets = formatDualDataD3(data.dates, data.tickets)
+      data.winRate = formatDataD3(data.dates, spreadSheetData[15].slice(start, end))
+      data.holiday = formatDataD3(data.dates, spreadSheetData[16].slice(start, end))
+      data.costs.staff = spreadSheetData[17].slice(start, end)
+      data.costs.total = spreadSheetData[18].slice(start, end)
+      data.costs = formatDualDataD3(data.dates, data.costs)
+      data.leads = formatDataD3(data.dates, spreadSheetData[19].slice(start, end))
       console.log(data)
       getSpreadsheetTargets()
     }
@@ -67,10 +81,12 @@ function getSpreadsheetTargets () {
   return $.ajax({
     url: '/targets'
   , success: function (body) {
-      console.log(body.values)
+      console.log('Target', body.values)
       spreadSheetTargets = body.values
       data.target.revenue = spreadSheetTargets[1][1]
+      data.target.profit = spreadSheetTargets[2][1]
       data.revenueVsTarget = formatItemVsTarget(data.dates, data.target.revenue, data.revenue)
+      data.profitVsTarget = formatItemVsTarget(data.dates, data.target.profit, data.profit)
       repopulate()
       calculateStatus()
     }
@@ -82,87 +98,88 @@ function repopulate () {
     , height = 300//200
 
   // Finance
-  createValueBarGraph('#revenue', width, height, '', data.revenue)
-  createValueBarGraph('#costs', width, height, 'data/costs.tsv')
+  createValueBarGraph('#revenue', width, height, data.revenue)
+  createValueBarGraph('#profit', width, height, data.profit)
+  createValueBarGraph('#costs', width, height, data.costs)
   createTargetLineGraph('#revenue-vs-target', width, height, data.revenueVsTarget)
+  createTargetLineGraph('#profit-vs-target', width, height, data.profitVsTarget)
 
   // Sales
-  createPercentageAreaGraph('#win-rate', width, height, 'data/win-rate.tsv')
-  createValueBarGraph('#closed-deals', width, height, '', data.closedDeals)
-  createValueBarGraph('#leads', width, height, '', data.leads)
-  createValueBarGraph('#pipeline', width, height, '', data.pipeline)
+  createPercentageAreaGraph('#win-rate', width, height, data.winRate)
+  createValueBarGraph('#closed-deals', width, height, data.closedDeals)
+  createValueBarGraph('#leads', width, height, data.leads)
+  createValueBarGraph('#pipeline', width, height, data.pipeline)
 
   // Production
   // createPercentageAreaGraph('#utilisation', width, height, 'data/utilisation.tsv')
   // createValueBarGraph('#active-projects', width, height, 'data/projects.tsv')
-  createValueBarGraph('#tickets', width, height, '', data.tickets)
+  createValueBarGraph('#tickets', width, height, data.tickets)
 
   // HR Stats
-  createValueBarGraph('#head-count', width, height, '', data.headCount)
-  createValueBarGraph('#sick-days', width, height, '', data.sickDays)
-  createValueBarGraph('#holiday', width, height, 'data/holiday.tsv')
+  createValueBarGraph('#head-count', width, height, data.headCount)
+  createValueBarGraph('#sick-days', width, height, data.sickDays)
+  createValueBarGraph('#holiday', width, height, data.holiday)
 }
 
 function calculateStatus () {
   let diffArrCol
 
+  // [difference, arrow, colour] = diffArrowColourCalculate(data)
+
   // Revenue
   diffArrCol = diffArrowColourCalculate(data.revenue)
-  let differenceRevenue = diffArrCol[0]
-    , arrowRevenue = diffArrCol[1]
-    , colourRevenue = diffArrCol[2]
-
   $('#revenue-status')
-    .html(arrowRevenue + ' ' + differenceRevenue + '% on last month')
-    .css('color', colourRevenue)
+    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
+    .css('color', diffArrCol[2])
+
+  // Profit
+  diffArrCol = diffArrowColourCalculate(data.profit)
+  $('#profit-status')
+    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
+    .css('color', diffArrCol[2])
 
   // Revenue vs Target
   diffArrCol = diffArrowColourCalculateTargets(data.revenueVsTarget)
-  let differenceRvT = diffArrCol[0]
-    , arrowRvT = diffArrCol[1]
-    , colourRvT = diffArrCol[2]
-
   $('#revenue-vs-target-status')
-    .html(arrowRvT + ' ' + differenceRvT + '%')
-    .css('color', colourRvT)
+    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on target')
+    .css('color', diffArrCol[2])
+
+  // Profit vs Target
+  diffArrCol = diffArrowColourCalculateTargets(data.profitVsTarget)
+  $('#profit-vs-target-status')
+    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on target')
+    .css('color', diffArrCol[2])
 
   // Closed Deals
   diffArrCol = diffArrowColourCalculate(data.closedDeals)
-  let differenceClosedDeals = diffArrCol[0]
-    , arrowClosedDeals = diffArrCol[1]
-    , colourClosedDeals = diffArrCol[2]
-
   $('#closed-deals-status')
-    .html(arrowClosedDeals + ' ' + differenceClosedDeals + '% on last month')
-    .css('color', colourClosedDeals)
+    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
+    .css('color', diffArrCol[2])
 
   // Leads
   diffArrCol = diffArrowColourCalculate(data.leads)
-  let differenceLeads = diffArrCol[0]
-    , arrowLeads = diffArrCol[1]
-    , colourLeads = diffArrCol[2]
-
   $('#leads-status')
-    .html(arrowLeads + ' ' + differenceLeads + '% on last month')
-    .css('color', colourLeads)
+    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
+    .css('color', diffArrCol[2])
+
+  // Win Rate
+  diffArrCol = diffArrowColourCalculate(data.winRate)
+  $('#win-rate-status')
+    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
+    .css('color', diffArrCol[2])
 
   // Pipeline
-
   diffArrCol = diffArrowColourCalculate(data.pipeline)
-  let differencePipeline = diffArrCol[0]
-    , arrowPipeline = diffArrCol[1]
-    , colourPipeline = diffArrCol[2]
-
   $('#pipeline-status')
-    .html(arrowPipeline + ' ' + differencePipeline + '% on last month')
-    .css('color', colourPipeline)
+    .html(diffArrCol[1] + ' ' + diffArrCol[0] + '% on last month')
+    .css('color', diffArrCol[2])
 }
 
 function diffArrowColourCalculate (data) {
   let length = data.length
     , current = data[length - 1].value
     , previous = data[length - 2].value
-    , difference = (current / previous) * 100 - 100
+    , difference = ((previous - current) / previous) * 100
     , arrow
     , colour
 
@@ -213,15 +230,16 @@ function formatDataD3 (dates, data) {
   return formatted
 }
 
-function formatTicketDataD3 (dates, data) {
+function formatDualDataD3 (dates, data) {
   let formatted = [ ]
+    , keys = Object.keys(data)
 
-  data.opened.forEach((item, index) => {
-    formatted.push({
-        date: dates[index]
-      , opened: +item
-      , closed: +data.closed[index]
-    })
+  data[keys[0]].forEach((item, index) => {
+    let obj = { }
+    obj.date = dates[index]
+    obj[keys[0]] = +item
+    obj[keys[1]] = +data[keys[1]][index]
+    formatted.push(obj)
   })
   /*
   [ { date: 'Sep 16'
