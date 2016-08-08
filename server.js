@@ -6,13 +6,6 @@ var express = require('express')
 app.set('view engine', 'pug')
 app.use(express.static(__dirname))
 
-// var authClient = new google.auth.JWT(
-//   '916233215878-rgv1hs8lb5d4bmq2gh7mip8eebu170kl@developer.gserviceaccount.com'
-//   , __dirname + '/lib/binary/key.pem'
-//   , null
-//   , ['https://www.googleapis.com/auth/spreadsheets']
-// )
-
 app.get('/', function (req, res) {
   res.render('index')
 })
