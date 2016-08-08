@@ -72,3 +72,26 @@ html
   script(src='/src/d3.v3.min.js')
   script(src='https://code.jquery.com/jquery-3.1.0.min.js')
   script(src='/src/bundle.js')
+  script(type='text/javascript').
+    $('.graph').on('click', function (e) {
+      zoomLevel = $(this).css('zoom')
+
+      if (zoomLevel === '1.5') {
+        $(this).animate({ zoom: '100%' }, 200)
+      } else {
+        unZoomAll()
+        $(this).animate({ zoom: '150%' }, 200)
+      }      
+    })
+
+    function unZoomAll (current) {
+      zoomLevel = $(this).css('zoom')
+      $('.graph').each(function (i, e) {
+        if (this === current) {
+          return
+        } else if (zoomLevel !== 1) {
+          $(this).animate({ zoom: '100%' }, 200)
+        }
+      })
+    }
+

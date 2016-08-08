@@ -210,7 +210,10 @@ function format (dates, data) {
 
   data.forEach((item, index) => {
     item = item.replace(/£|,/g, '')
-    formatted.push({ date: dates[index], value: item })
+    formatted.push({
+      date: dates[index]
+    , value: item || '0'
+    })
   })
   return formatted
 }
@@ -223,7 +226,7 @@ function formatDual (dates, data) {
     let obj = { }
     obj.date = dates[index]
     obj[keys[0]] = +item
-    obj[keys[1]] = +data[keys[1]][index]
+    obj[keys[1]] = +data[keys[1]][index] || 0
     formatted.push(obj)
   })
   /*

@@ -1,22 +1,24 @@
 {
-    "DATES": 0
-  , "REVENUE": 1
-  , "PROFIT": 2
-  , "ANNUITY": 3
-  , "HEAD_COUNT": 4
-  , "PIPELINE": 5
-  , "CLOSED_DEALS": 6
-  , "STAFF_TURNOVER": 7
-  , "REVENUE_PER_HEAD": 8
-  , "HOSTING_UPTIME": 9
-  , "HOSTING_INCIDENTS": 10
-  , "SICK_DAYS": 11
-  , "TICKETS_OPENED": 12
-  , "TICKETS_CLOSED": 13
-  , "STAFF_SATISFACTION": 14
-  , "WIN_RATE": 15
-  , "HOLIDAY": 16
-  , "COSTS_STAFF": 17
-  , "COSTS_TOTAL": 18
-  , "LEADS": 19
+    "DATES":              0
+  , "CUMULATIVE_REVENUE": 1
+  , "REVENUE":            2
+  , "PROFIT":             3
+  , "ANNUITY":            4
+  , "HEAD_COUNT":         5
+  , "WTE":                6
+  , "PIPELINE":           7
+  , "CLOSED_DEALS":       8
+  , "STAFF_TURNOVER":     9
+  , "REVENUE_PER_HEAD":   10
+  , "HOSTING_UPTIME":     11
+  , "HOSTING_INCIDENTS":  12
+  , "SICK_DAYS":          13
+  , "TICKETS_OPENED":     14
+  , "TICKETS_CLOSED":     15
+  , "STAFF_SATISFACTION": 16
+  , "WIN_RATE":           17
+  , "HOLIDAY":            18
+  , "COSTS_STAFF":        19
+  , "COSTS_TOTAL":        20
+  , "LEADS":              21
   }
