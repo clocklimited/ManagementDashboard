@@ -3,6 +3,7 @@ var express = require('express')
   , app = express()
   , SheetsHelper = require('./lib/SheetsHelper')
 
+app.set('view engine', 'pug')
 app.use(express.static(__dirname))
 
 // var authClient = new google.auth.JWT(
@@ -11,6 +12,10 @@ app.use(express.static(__dirname))
 //   , null
 //   , ['https://www.googleapis.com/auth/spreadsheets']
 // )
+
+app.get('/', function (req, res) {
+  res.render('index')
+})
 
 app.get('/data', function (req, res) {
   SheetsHelper.service.spreadsheets.values.get({

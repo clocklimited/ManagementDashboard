@@ -1,0 +1,74 @@
+doctype html
+html
+  meta(charset='utf-8')
+  link(rel='stylesheet', type='text/css', href='css/lato/stylesheet.css')
+  link(rel='stylesheet', type='text/css', href='css/dashboard.css')
+  body
+    h1 Clock Management Dashboard
+    #finance.row
+      h2 Finance
+      #revenue.graph
+        h3
+          | Revenue 
+          span#revenue-status
+      #profit.graph
+        h3
+          | Profit 
+          span#profit-status
+      #costs.graph
+        h3 Costs
+      #annuity.graph
+        h3
+          | Annuity 
+          span#annuity-status
+      #revenue-per-head.graph
+        h3
+          | Revenue Per Head 
+          span#revenue-per-head-status
+      #revenue-vs-target.graph
+        h3
+          | Revenue VS Target 
+          span#revenue-vs-target-status.status
+      #profit-vs-target.graph
+        h3
+          | Profit VS Target 
+          span#profit-vs-target-status.status
+      #rph-vs-target.graph
+        h3
+          | RPH VS Target 
+          span#rph-vs-target-status.status
+    #sales-section.row
+      h2 Sales
+      #win-rate.graph
+        h3
+          | Win Rate 
+          span#win-rate-status.status
+      #closed-deals.graph
+        h3
+          | Closed Deals 
+          span#closed-deals-status.status
+      #leads.graph
+        h3
+          | Leads 
+          span#leads-status.status
+      #pipeline.graph
+        h3
+          | Pipeline 
+          span#pipeline-status.status
+    #production.row
+      h2 Production
+      #tickets.graph
+        h3 Tickets
+    #human-resources.half.row
+      h2 HR
+      #head-count.graph
+        h3 Head Count
+      #holiday.graph
+        h3 Holiday
+      #sick-days.graph
+        h3 Sick Days
+      #staff-satisfaction.graph
+        h3 Staff Satisfaction
+  script(src='/src/d3.v3.min.js')
+  script(src='https://code.jquery.com/jquery-3.1.0.min.js')
+  script(src='/src/bundle.js')
