@@ -6,9 +6,6 @@ const createValueBarGraph = require('./createValueBarGraph')
 
 let spreadSheetData = [ ]
   , data = {
-  //     dates: [ ]
-  //   , revenue: [ ]
-  //   , profit: [ ]
      revenueVsTarget: {
         date: [ ]
       , target: [ ]
@@ -24,18 +21,10 @@ let spreadSheetData = [ ]
       , target: [ ]
       , value: [ ]
     }
-  //   , winRate: [ ]
-  //   , closedDeals: [ ]
-  //   , leads: [ ]
-  //   , pipeline: [ ]
     , tickets: {
           opened: [ ]
         , closed: [ ]
       }
-  //   , headCount: [ ]
-  //   , revenuePerHead: [ ]
-  //   , holiday: [ ]
-  //   , sickDays: [ ]
     , costs: {
         staff: [ ]
       , total: [ ]
@@ -71,6 +60,7 @@ function getSpreadsheetData () {
       data.costs = formatDual(data.dates, data.costs)
       data.annuity = format(data.dates, spreadSheetData[pos.ANNUITY].slice(start, end))
       data.revenuePerHead = format(data.dates, spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
+      // data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
       // SALES
       data.winRate = format(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
       data.closedDeals = format(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
@@ -84,9 +74,7 @@ function getSpreadsheetData () {
       data.headCount = format(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
       data.sickDays = format(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
       data.holiday = format(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
-
       data.staffSatisfaction = format(data.dates, spreadSheetData[pos.STAFF_SATISFACTION].slice(start, end))
-      data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
 
       console.log('Formatted Data', data)
       getSpreadsheetTargets()
@@ -122,6 +110,7 @@ function repopulate () {
   createValueBarGraph('#costs', width, height, data.costs)
   createValueBarGraph('#annuity', width, height, data.annuity)
   createValueBarGraph('#revenue-per-head', width, height, data.revenuePerHead)
+  // createValueBarGraph('#staff-turnover', width, height, data.staffTurnover)
   createTargetLineGraph('#revenue-vs-target', width, height, data.revenueVsTarget)
   createTargetLineGraph('#profit-vs-target', width, height, data.profitVsTarget)
   createTargetLineGraph('#rph-vs-target', width, height, data.revenuePerHeadVsTarget)
@@ -141,6 +130,7 @@ function repopulate () {
   createValueBarGraph('#head-count', width, height, data.headCount)
   createValueBarGraph('#sick-days', width, height, data.sickDays)
   createValueBarGraph('#holiday', width, height, data.holiday)
+  createPercentageAreaGraph('#staff-satisfaction', width, height, data.staffSatisfaction)
 }
 
 function calculateStatus () {
@@ -155,6 +145,9 @@ function calculateStatus () {
 
   // Revenue Per Head
   addStatus('#revenue-per-head-status', data.revenuePerHead, 'last month')
+
+  // Staff Turnover
+  // addStatus('#staff-turnover-status', data.staffTurnover, 'last month')
 
   // Revenue vs Target
   addStatus('#revenue-vs-target-status', data.revenueVsTarget, 'target')
@@ -208,7 +201,7 @@ function addStatus (target, data, vs) {
     colour = 'rgb(160, 8, 8)'
   }
   $(target)
-    .html(arrow + ' ' + difference.toFixed(2) + '% on ' + vs)
+    .html(arrow + ' ' + difference.toFixed(2) + '%')//' on ' + vs)
     .css('color', colour)
 }
 
