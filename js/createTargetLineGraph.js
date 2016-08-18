@@ -41,6 +41,8 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
         .append('svg')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
+          .attr('preserveAspectRatio', 'xMinYMin meet')
+          .attr('viewBox', '0 0 ' + w + ' ' + h)
         .append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
@@ -151,13 +153,13 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
       .style('stroke', 'black')
       .style('stroke-width', '3.5px')
       .style('opacity', 0.8)
-      // .attr('dx', 8)
+      .attr('dx', '1em')
       .attr('dy', '-0.5em')
   focus.append('text')
       .attr('class', 'y4')
       .style('font-size', '1.5em')
       .style('color', 'black')
-      // .attr('dx', 8)
+      .attr('dx', '1em')
       .attr('dy', '-0.5em')
 
   // append the rectangle to capture mouse
@@ -174,7 +176,7 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
     var x0 = x.invert(d3.mouse(this)[0])
       , i = formatDate(data, x0, 1)
       , d0 = data[i - 1]
-      , d1 = data[i]
+      , d1 = data[i] || { date: 0 }
       , d = x0 - d0.date > d1.date - x0 ? d1 : d0
 
     focus.select('circle.y1')
@@ -198,17 +200,17 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
     focus.select('text.y3')
         .attr('transform',
               'translate(' + x(d.date) + ',' + y(d.target) + ')')
-        .text('£' + formatNumber(d.value))
+        .text(formatNumberCurrency(d.value))
 
     focus.select('text.y4')
         .attr('transform',
               'translate(' + x(d.date) + ',' + y(d.target) + ')')
-        .text('£' + formatNumber(d.value))
+        .text(formatNumberCurrency(d.value))
 
     focus.select('.x')
         .attr('transform',
-              'translate(' + x(d.date) + ',' + y(d.target) + ')')
-        .attr('y2', height - y(d.target))
+              'translate(' + x(d.date) + ',' + Math.min(y(d.target), y(d.value)) + ')')
+        .attr('y2', height - Math.min(y(d.target), y(d.value)))
 
     focus.select('.y1')
         .attr('transform',
@@ -219,5 +221,13 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
         .attr('transform',
               'translate(' + width * -1 + ',' + y(d.value) + ')')
         .attr('x2', width + width)
+  }
+
+  function formatNumberCurrency (number) {
+    if (number < 0) {
+      return '-£' + formatNumber(-number)
+    } else {
+      return '£' + formatNumber(number)
+    }
   }
 }

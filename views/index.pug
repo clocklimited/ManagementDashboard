@@ -85,8 +85,8 @@ html
     })
 
     function unZoomAll (current) {
-      zoomLevel = $(this).css('zoom')
       $('.graph').each(function (i, e) {
+        zoomLevel = $(this).css('zoom')
         if (this === current) {
           return
         } else if (zoomLevel !== 1) {

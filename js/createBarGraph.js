@@ -1,9 +1,10 @@
-module.exports = function createValueBarGraph (containerId, w, h, data) {
+module.exports = function createBarGraph (containerId, w, h, data) {
 
   let margin = {top: 20, right: 20, bottom: 30, left: 50}
     , width = w - margin.left - margin.right
     , height = h - margin.top - margin.bottom
 
+    , formatDate = d3.bisector(function (d) { return d.date }).left
     , formatNumber = d3.format('.2s')
 
     , x0 = d3.scale.ordinal()
@@ -39,6 +40,7 @@ module.exports = function createValueBarGraph (containerId, w, h, data) {
     , state
     , min
     , max
+    , focus
 
   data.forEach((d) => {
     d.counts = labels.map((name) => { return { name: name, value: +d[name] } })
@@ -103,4 +105,84 @@ module.exports = function createValueBarGraph (containerId, w, h, data) {
         .style('text-anchor', 'end')
         .text((d) => d.charAt(0).toUpperCase() + d.slice(1))
   }
+
+  // TOOLTIPs
+  focus = svg.append('g')
+      .style('display', 'none')
+  // place the value at the intersection
+  focus.append('text')
+      .attr('class', 'y3')
+      .style('font-size', '1.5em')
+      .style('stroke', 'black')
+      .style('stroke-width', '3.5px')
+      .style('opacity', 0.8)
+      // .attr('dx', '1em')
+      .attr('dy', '-0.5em')
+  focus.append('text')
+      .attr('class', 'y4')
+      .style('font-size', '1.5em')
+      .style('color', 'black')
+      // .attr('dx', '1em')
+      .attr('dy', '-0.5em')
+
+  // append the rectangle to capture mouse
+  svg.append('rect')
+      .attr('width', width)
+      .attr('height', height)
+      .style('fill', 'none')
+      .style('pointer-events', 'all')
+      // .on('mouseover', function () { focus.style('display', null) })
+      // .on('mouseout', function () { focus.style('display', 'none') })
+      // .on('mousemove', mousemove)
+
+  function mousemove () {
+    var mouse = d3.mouse(this)[0]
+      , pos = x0.domain()[d3.bisect(x0.range(), mouse) - 1]
+      , i = find(data, pos)
+      , d0 = data[i - 1] || {date: 0}
+      , d1 = data[i] || {date: 0}
+      , d = pos - d0.date > d1.date - pos ? d1 : d0
+
+    console.log({
+      mouse: mouse
+    , pos: pos
+    , i: i
+    , d0: d0
+    , d1: d1
+    , d: d
+    , data: data
+    })
+    if (d1 === {date: 0}) {
+      console.warn('error getting data[i]')
+    }
+    focus.select('text.y3')
+        .attr('transform',
+              'translate(' + x0(d.date) + ',' + y(d.value) + ')')
+        .text(formatNumberCurrency(d))
+
+    focus.select('text.y4')
+        .attr('transform',
+              'translate(' + x0(d.date) + ',' + y(d.value) + ')')
+        .text(formatNumberCurrency(d))
+  }
+
+  function formatNumberCurrency (number) {
+    //console.log(number)
+    number = number.value
+    if (number < 0) {
+      return '-£' + d3.format('.2s')(-parseInt(number))
+    } else {
+      return '£' + d3.format('.2s')(+number)
+    }
+  }
+
+  function find (data, key) {
+    data.forEach((e, i) => {
+      if (e.date === key) {
+        return i
+      }
+    })
+    return -1
+  }
+
 }

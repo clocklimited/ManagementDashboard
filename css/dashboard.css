@@ -70,11 +70,11 @@ text {
   background: #999999;
 }
 #sales-section.row .graph {
-  background: #0B2F3D;
+  background: #3A539B;/*#0B2F3D;*/
 }
 #production.row .graph {
-  background: green;
+  background: #00B16A;
 }
 #human-resources.row .graph {
-  background: #770077;
+  background: #8E44AD;/*#770077;*/
 }

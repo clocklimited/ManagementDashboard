@@ -43,14 +43,14 @@ function getSpreadsheetData () {
   , success: function (body) {
       console.log('Data', body.values)
       spreadSheetData = body.values
-      let currentMonth = 'October 2016'//moment().format('MMMM YYYY')
-        , currentMonthIndex = spreadSheetData[0].indexOf(currentMonth)
+      let currentMonth = moment().format('MMMM YYYY')
+        , currentMonthIndex = spreadSheetData[pos.BOARDPACK_DATE].indexOf(currentMonth) + 1
         , range = 6
         // Prevents going out of bounds
         , start = currentMonthIndex <= range ? 1 : currentMonthIndex - range
         , end = currentMonthIndex
 
-      data.dates = spreadSheetData[0].slice(start, end)
+      data.dates = spreadSheetData[pos.MONTH].slice(start, end)
       data.dates = data.dates.map((date) => moment(date, 'MMMM YYYY').format('MMM YY'))
       // FINANCE
       data.revenue = format(data.dates, spreadSheetData[pos.REVENUE].slice(start, end))
@@ -74,7 +74,9 @@ function getSpreadsheetData () {
       data.headCount = format(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
       data.sickDays = format(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
       data.holiday = format(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
-      data.staffSatisfaction = format(data.dates, spreadSheetData[pos.STAFF_SATISFACTION].slice(start, end))
+      data.staffSatisfaction = spreadSheetData[pos.STAFF_SATISFACTION].slice(start, end)
+      data.staffSatisfaction = data.staffSatisfaction.map((x) => +x / 10)
+      data.staffSatisfaction = format(data.dates, data.staffSatisfaction)
 
       console.log('Formatted Data', data)
       getSpreadsheetTargets()
@@ -180,11 +182,11 @@ function addStatus (target, data, vs) {
     , colour
 
   if (vs !== 'target') {
-    current = data[length - 1].value
-    previous = data[length - 2].value
-    difference = ((current - previous) / Math.abs(previous)) * 100
+    current = data[length - 1] || { value: 1 }
+    previous = data[length - 2] || { value: 1 }
+    difference = ((current.value - previous.value) / Math.abs(previous.value)) * 100
   } else {
-    let currentMonthData = data[length - 1]
+    let currentMonthData = data[length - 1] || { value: 1, target: 1 }
       , revenue = currentMonthData.value
       , target = currentMonthData.target
     difference = (revenue / target) * 100 - 100
@@ -201,7 +203,7 @@ function addStatus (target, data, vs) {
     colour = 'rgb(160, 8, 8)'
   }
   $(target)
-    .html(arrow + ' ' + difference.toFixed(2) + '%')//' on ' + vs)
+    .html(arrow + ' ' + difference.toFixed(2) + '%')
     .css('color', colour)
 }
 
@@ -209,10 +211,12 @@ function format (dates, data) {
   let formatted = [ ]
 
   data.forEach((item, index) => {
-    item = item.replace(/£|,/g, '')
+    if (typeof item === 'string') {
+      item = item.replace(/£|,/g, '')
+    }
     formatted.push({
       date: dates[index]
-    , value: item || '0'
+    , value: item === '' ? '0' : item
     })
   })
   return formatted
@@ -226,7 +230,7 @@ function formatDual (dates, data) {
     let obj = { }
     obj.date = dates[index]
     obj[keys[0]] = +item
-    obj[keys[1]] = +data[keys[1]][index] || 0
+    obj[keys[1]] = +data[keys[1]][index] === '' ? 0 : +data[keys[1]][index]
     formatted.push(obj)
   })
   /*
@@ -247,7 +251,7 @@ function formatItemVsTarget (dates, target, data) {
 
   dates.forEach(function (item, index) {
     runningTarget += oneMonthTarget
-    runningRevenueTotal += +data[index].value
+    runningRevenueTotal += +data[index].value === '' ? 0 : +data[index].value
     formatted.push({
         date: item
       , target: runningTarget

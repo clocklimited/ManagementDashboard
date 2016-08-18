@@ -7,7 +7,8 @@ npm install
 
 ## Running
 ### Development
-Run server with ```nodemon server.js```
+Place the key file in the ```/lib/binary``` directory.
+Run server with ```KEYFILE=./binary/keyfile.json nodemon server.js```
 
 Watch index.js with ```npm run watch```
 
