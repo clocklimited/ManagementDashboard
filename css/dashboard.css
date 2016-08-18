@@ -21,6 +21,11 @@ h2 {
 h3 {
   font-size: 2em;
 }
+h4 {
+  font-size: 1.5em;
+  margin-left: 20px;
+  color: white;
+}
 
 span {
   color: black;
@@ -61,13 +66,13 @@ text {
   color: white;
   margin-bottom: 0px;
 }
-.row .graph {
+.row .graph, .table {
   margin: 8px;
   display: inline-block;
   background: #222222;
 }
 #finance.row .graph {
-  background: #999999;
+  background: #444444;
 }
 #sales-section.row .graph {
   background: #3A539B;/*#0B2F3D;*/
@@ -77,4 +82,8 @@ text {
 }
 #human-resources.row .graph {
   background: #8E44AD;/*#770077;*/
+}
+#human-resources.row .table {
+  background: #8E44AD;/*#770077;*/
+  vertical-align: top;
 }

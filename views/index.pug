@@ -58,17 +58,37 @@ html
     #production.row
       h2 Production
       #tickets.graph
-        h3 Tickets
+        h3
+          | Tickets
     #human-resources.half.row
       h2 HR
       #head-count.graph
-        h3 Head Count
+        h3 
+          | Head Count
       #holiday.graph
-        h3 Holiday
+        h3 
+          | Holiday
       #sick-days.graph
-        h3 Sick Days
-      #staff-satisfaction.graph
-        h3 Staff Satisfaction
+        h3 
+          | Sick Days
+      #satisfaction-group
+        #staff-satisfaction.table
+          h3 
+            | Staff Satisfaction
+            span#staff-satisfaction-status.status
+          h4 Target
+            span#staff-satisfaction-target
+          h4 Current
+            span#staff-satisfaction-value
+        #client-satisfaction.graph
+          h3 
+            | Client Satisfaction
+            span#client-satisfaction-status.status
+          h4 Target
+            span#client-satisfaction-target
+          h4 Current
+            span#client-satisfaction-value
+          
   script(src='/src/d3.v3.min.js')
   script(src='https://code.jquery.com/jquery-3.1.0.min.js')
   script(src='/src/bundle.js')

@@ -24,4 +24,12 @@
   , "COSTS_STAFF":        22
   , "COSTS_TOTAL":        23
   , "LEADS":              24
+  , "CLIENT_SATISFACTION": 25
+  , "TARGETS": {
+      "REVENUE":            1
+    , "PROFIT":             2
+    , "CLIENT_SATISFACTION": 3
+    , "STAFF_SATISFACTION": 4
+    , "REVENUE_PER_HEAD":   5
   }
+}

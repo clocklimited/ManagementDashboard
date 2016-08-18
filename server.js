@@ -3,7 +3,7 @@ var express = require('express')
   , app = express()
   , SheetsHelper = require('./lib/SheetsHelper')
   , spreadsheetId = '1vYkw_63Ak4tGoBvD1uT_hDxSMEWmgydyPLg2nHr9FPc' // Development Sheet
-  //, spreadsheetId = '1Pt0CFzEwJx-AYT0H98OKwoDkmpPw6xvYujc04eo2e7o' // Live Sheet
+  // , spreadsheetId = '1Pt0CFzEwJx-AYT0H98OKwoDkmpPw6xvYujc04eo2e7o' // Live Sheet
 
 app.set('view engine', 'pug')
 app.use(express.static(__dirname))

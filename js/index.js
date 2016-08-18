@@ -1,6 +1,7 @@
 const createValueBarGraph = require('./createValueBarGraph')
     , createPercentageAreaGraph = require('./createPercentageAreaGraph')
     , createTargetLineGraph = require('./createTargetLineGraph')
+    , addDetails = require('./addDetails')
     , moment = require('moment')
     , pos = require('../lib/positions.json')
 
@@ -34,6 +35,14 @@ let spreadSheetData = [ ]
       , profit: 0
       , revenuePerHead: 0
       }
+    , staffSatisfaction: {
+        target: 0
+      , value: 0
+    }
+    , clientSatisfaction: {
+        target: 0
+      , value: 0
+    }
   }
   , spreadSheetTargets = [ ]
 
@@ -74,9 +83,8 @@ function getSpreadsheetData () {
       data.headCount = format(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
       data.sickDays = format(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
       data.holiday = format(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
-      data.staffSatisfaction = spreadSheetData[pos.STAFF_SATISFACTION].slice(start, end)
-      data.staffSatisfaction = data.staffSatisfaction.map((x) => +x / 10)
-      data.staffSatisfaction = format(data.dates, data.staffSatisfaction)
+      data.staffSatisfaction.value = spreadSheetData[pos.STAFF_SATISFACTION][end - 1]
+      data.clientSatisfaction.value = spreadSheetData[pos.CLIENT_SATISFACTION][end - 1]
 
       console.log('Formatted Data', data)
       getSpreadsheetTargets()
@@ -90,9 +98,11 @@ function getSpreadsheetTargets () {
   , success: function (body) {
       console.log('Target', body.values)
       spreadSheetTargets = body.values
-      data.target.revenue = spreadSheetTargets[1][1]
-      data.target.profit = spreadSheetTargets[2][1]
-      data.target.revenuePerHead = spreadSheetTargets[5][1]
+      data.target.revenue = spreadSheetTargets[pos.TARGETS.REVENUE][1]
+      data.target.profit = spreadSheetTargets[pos.TARGETS.PROFIT][1]
+      data.target.revenuePerHead = spreadSheetTargets[pos.TARGETS.REVENUE_PER_HEAD][1]
+      data.staffSatisfaction.target = spreadSheetTargets[pos.TARGETS.STAFF_SATISFACTION][1]
+      data.clientSatisfaction.target = spreadSheetTargets[pos.TARGETS.CLIENT_SATISFACTION][1]
       data.revenueVsTarget = formatItemVsTarget(data.dates, data.target.revenue, data.revenue)
       data.profitVsTarget = formatItemVsTarget(data.dates, data.target.profit, data.profit)
       data.revenuePerHeadVsTarget = formatItemVsTarget(data.dates, data.target.revenuePerHead, data.revenuePerHead)
@@ -103,8 +113,8 @@ function getSpreadsheetTargets () {
 }
 
 function repopulate () {
-  let width = 480//320
-    , height = 300//200
+  let width = Math.floor(($(window).width() - 80) / 4) //480//320
+    , height = width / 1.6 //300//200
 
   // Finance
   createValueBarGraph('#revenue', width, height, data.revenue)
@@ -132,7 +142,10 @@ function repopulate () {
   createValueBarGraph('#head-count', width, height, data.headCount)
   createValueBarGraph('#sick-days', width, height, data.sickDays)
   createValueBarGraph('#holiday', width, height, data.holiday)
-  createPercentageAreaGraph('#staff-satisfaction', width, height, data.staffSatisfaction)
+  // createPercentageAreaGraph('#staff-satisfaction', width, height, data.staffSatisfaction)
+  // createPercentageAreaGraph('#client-satisfaction', width, height, data.clientSatisfaction)
+  addDetails('#staff-satisfaction', width, height / 2, data.staffSatisfaction)
+  addDetails('#client-satisfaction', width, height / 2, data.clientSatisfaction)
 }
 
 function calculateStatus () {
@@ -171,24 +184,33 @@ function calculateStatus () {
 
   // Pipeline
   addStatus('#pipeline-status', data.pipeline, 'last month')
+
+  // Staff Satisfaction
+  addStatus('#staff-satisfaction-status', [ data.staffSatisfaction ], 'target')
+
+  // Client Satisfaction
+  addStatus('#client-satisfaction-status', [ data.clientSatisfaction ], 'target')
 }
 
-function addStatus (target, data, vs) {
+function addStatus (targetId, data, vs) {
   let length = data.length
     , current
+    , currentMonthData
+    , revenue
+    , target
     , previous
     , difference
-    , arrow
-    , colour
+    , arrow = '&#8212;' // Dash
+    , colour = 'black'
 
   if (vs !== 'target') {
     current = data[length - 1] || { value: 1 }
     previous = data[length - 2] || { value: 1 }
     difference = ((current.value - previous.value) / Math.abs(previous.value)) * 100
   } else {
-    let currentMonthData = data[length - 1] || { value: 1, target: 1 }
-      , revenue = currentMonthData.value
-      , target = currentMonthData.target
+    currentMonthData = data[length - 1] || { value: 1, target: 1 }
+    revenue = currentMonthData.value
+    target = currentMonthData.target
     difference = (revenue / target) * 100 - 100
   }
 
@@ -200,9 +222,9 @@ function addStatus (target, data, vs) {
     colour = 'rgb(10, 220, 10)'
   } else if (difference < 0) {
     arrow = '&#x25BC;' // Down arrow
-    colour = 'rgb(160, 8, 8)'
+    colour = 'rgb(210, 8, 8)'
   }
-  $(target)
+  $(targetId)
     .html(arrow + ' ' + difference.toFixed(2) + '%')
     .css('color', colour)
 }
