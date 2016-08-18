@@ -43,7 +43,7 @@ function getSpreadsheetData () {
   , success: function (body) {
       console.log('Data', body.values)
       spreadSheetData = body.values
-      let currentMonth = 'October 2016'//moment().format('MMMM YYYY')
+      let currentMonth = moment().format('MMMM YYYY')
         , currentMonthIndex = spreadSheetData[0].indexOf(currentMonth)
         , range = 6
         // Prevents going out of bounds
