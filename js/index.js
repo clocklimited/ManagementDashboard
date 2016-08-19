@@ -202,13 +202,14 @@ function addStatus (targetId, data, vs) {
     , difference
     , arrow = '&#8212;' // Dash
     , colour = 'black'
+    , fallbackValue = { value: 1, target: 1 }
 
   if (vs !== 'target') {
-    current = data[length - 1] || { value: 1 }
-    previous = data[length - 2] || { value: 1 }
+    current = validate(data[length - 1], fallbackValue)
+    previous = validate(data[length - 2], fallbackValue)
     difference = ((current.value - previous.value) / Math.abs(previous.value)) * 100
   } else {
-    currentMonthData = data[length - 1] || { value: 1, target: 1 }
+    currentMonthData = validate(data[length - 1], fallbackValue)
     revenue = currentMonthData.value
     target = currentMonthData.target
     difference = (revenue / target) * 100 - 100
@@ -238,7 +239,7 @@ function format (dates, data) {
     }
     formatted.push({
       date: dates[index]
-    , value: item === '' ? '0' : item
+    , value: validate(item, '0')
     })
   })
   return formatted
@@ -252,7 +253,7 @@ function formatDual (dates, data) {
     let obj = { }
     obj.date = dates[index]
     obj[keys[0]] = +item
-    obj[keys[1]] = +data[keys[1]][index] === '' ? 0 : +data[keys[1]][index]
+    obj[keys[1]] = validate(+data[keys[1]][index], 0)
     formatted.push(obj)
   })
   /*
@@ -273,7 +274,7 @@ function formatItemVsTarget (dates, target, data) {
 
   dates.forEach(function (item, index) {
     runningTarget += oneMonthTarget
-    runningRevenueTotal += +data[index].value === '' ? 0 : +data[index].value
+    runningRevenueTotal += +validate(data[index], { value: 0 }).value
     formatted.push({
         date: item
       , target: runningTarget
@@ -288,6 +289,14 @@ function formatItemVsTarget (dates, target, data) {
   } ]
   */
   return formatted
+}
+
+function validate (data, fallbackValue) {
+  if (data === '' || data === undefined || data === null) {
+    return fallbackValue
+  } else {
+    return data
+  }
 }
 
 getSpreadsheetData()
