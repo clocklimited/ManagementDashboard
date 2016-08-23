@@ -95,6 +95,7 @@ text {
   z-index: 999;
   text-anchor: start;
   writing-mode: tb;
+  display: none;
 }
 
 /* Flat Button @ http://cssdeck.com/labs/beautiful-flat-buttons
