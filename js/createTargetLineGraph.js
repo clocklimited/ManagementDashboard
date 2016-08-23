@@ -139,13 +139,13 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
       .style('stroke-width', '3.5px')
       .style('opacity', 0.8)
       // .attr('dx', 8)
-      .attr('dy', '-1.6em')
+      .attr('dy', '0.5em')
   focus.append('text')
       .attr('class', 'y2')
       .style('font-size', '1.5em')
       .style('color', 'black')
       // .attr('dx', 8)
-      .attr('dy', '-1.6em')
+      .attr('dy', '0.5em')
 
   // place the value at the intersection
   focus.append('text')
@@ -155,13 +155,13 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
       .style('stroke-width', '3.5px')
       .style('opacity', 0.8)
       .attr('dx', '1em')
-      .attr('dy', '-0.5em')
+      .attr('dy', '1.6em')
   focus.append('text')
       .attr('class', 'y4')
       .style('font-size', '1.5em')
       .style('color', 'black')
       .attr('dx', '1em')
-      .attr('dy', '-0.5em')
+      .attr('dy', '1.6em')
 
   // append the rectangle to capture mouse
   svg.append('rect')

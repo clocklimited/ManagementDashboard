@@ -52,7 +52,7 @@ function getSpreadsheetData () {
   , success: function (body) {
       console.log('Data', body.values)
       spreadSheetData = body.values
-      let currentMonth = getUrlParameter('month') || moment().format('MMMM YYYY')
+      let currentMonth = validate(getUrlParameter('month'), moment().format('MMMM YYYY'))
         , currentMonthIndex = spreadSheetData[pos.BOARDPACK_DATE].indexOf(currentMonth) + 1
         , range = 6
         // Prevents going out of bounds
@@ -105,7 +105,7 @@ function getSpreadsheetTargets () {
       data.clientSatisfaction.target = spreadSheetTargets[pos.TARGETS.CLIENT_SATISFACTION][1]
       data.revenueVsTarget = formatItemVsTarget(data.dates, data.target.revenue, data.revenue)
       data.profitVsTarget = formatItemVsTarget(data.dates, data.target.profit, data.profit)
-      data.revenuePerHeadVsTarget = formatItemVsTarget(data.dates, data.target.revenuePerHead, data.revenuePerHead)
+      data.revenuePerHeadVsTarget = formatItemVsTarget(data.dates, data.target.revenuePerHead, data.revenuePerHead, true)
       repopulate()
       calculateStatus()
     }
@@ -265,13 +265,18 @@ function formatDual (dates, data) {
   return formatted
 }
 
-function formatItemVsTarget (dates, target, data) {
+function formatItemVsTarget (dates, target, data, notCumulative) {
   // Strip £ , and turn into monthly target
-  let oneMonthTarget = (+target.replace(/£|,/g, '')) / 12
+  let oneMonthTarget = +target.replace(/£|,/g, '')
     , runningTarget = oneMonthTarget
     , runningRevenueTotal = 0
     , formatted = [ ]
 
+  if (notCumulative) {
+    oneMonthTarget = 0
+  } else {
+    oneMonthTarget /= 12
+  }
   dates.forEach(function (item, index) {
     runningTarget += oneMonthTarget
     runningRevenueTotal += +validate(data[index], { value: 0 }).value
