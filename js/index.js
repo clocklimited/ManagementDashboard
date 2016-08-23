@@ -52,7 +52,7 @@ function getSpreadsheetData () {
   , success: function (body) {
       console.log('Data', body.values)
       spreadSheetData = body.values
-      let currentMonth = moment().format('MMMM YYYY')
+      let currentMonth = getUrlParameter('month') || moment().format('MMMM YYYY')
         , currentMonthIndex = spreadSheetData[pos.BOARDPACK_DATE].indexOf(currentMonth) + 1
         , range = 6
         // Prevents going out of bounds
@@ -297,6 +297,10 @@ function validate (data, fallbackValue) {
   } else {
     return data
   }
+}
+
+function getUrlParameter (name) {
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null
 }
 
 getSpreadsheetData()
