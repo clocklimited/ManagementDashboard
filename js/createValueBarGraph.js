@@ -31,6 +31,7 @@ module.exports = function createValueBarGraph (containerId, w, h, data) {
         .append('svg')
           .attr('width', width + margin.left + margin.right)
           .attr('height', height + margin.top + margin.bottom)
+          .attr('viewBox', '0 0 ' + w + ' ' + h)
         .append('g')
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
@@ -82,6 +83,15 @@ module.exports = function createValueBarGraph (containerId, w, h, data) {
       .attr('height', (d) => Math.abs(y(d.value) - y(0)))
       .attr('class', (d) => classScale(d.name))
 
+  if (data.length === 0) {
+    svg.append('g')
+        .append('text')
+          .text('ERROR: NO DATA')
+          .attr('y', height / 2)
+          .attr('dx', '.5em')
+          .style('font-size', 20)
+  }
+
   if (labels.length > 1) {
     legend = svg.selectAll('.legend')
         .data(labels.slice().reverse())
@@ -102,5 +112,22 @@ module.exports = function createValueBarGraph (containerId, w, h, data) {
         .attr('dy', '.35em')
         .style('text-anchor', 'end')
         .text((d) => d.charAt(0).toUpperCase() + d.slice(1))
+
+    labels.forEach((e, i) => {
+      state.append('text')
+        .text((d) => d[e])
+        .attr('class', 'valueText')
+        .attr('y', (d) => y(Math.max(0, d[e])))
+        .attr('dx', x1.rangeBand() * i)
+        .attr('transform', 'translate(' + x1.rangeBand() / 2 + ', 0)')
+        .style('fill', (i % 2 === 0 ? 'black' : 'white'))
+    })
+
+  } else {
+    state.append('text')
+      .text((d) => d3.format(',')(d.value))
+      .attr('class', 'valueText')
+      .attr('y', (d) => y(Math.max(0, d.value)))
+      .attr('transform', 'translate(' + x1.rangeBand() / 2 + ', 0)')
   }
 }

@@ -5,6 +5,8 @@ html
   link(rel='stylesheet', type='text/css', href='css/dashboard.css')
   body
     h1 Clock Management Dashboard
+    #buttons.row
+      button.flat-button(id='valueToggle') Toggle Values
     #finance.row
       h2 Finance
       #revenue.graph
@@ -88,7 +90,6 @@ html
             span#client-satisfaction-target
           h4 Current
             span#client-satisfaction-value
-          
   script(src='/src/d3.v3.min.js')
   script(src='https://code.jquery.com/jquery-3.1.0.min.js')
   script(src='/src/bundle.js')
@@ -114,4 +115,8 @@ html
         }
       })
     }
+
+    $('#valueToggle').on('click', function () {
+      $('.valueText').each((i, e) => $(e).toggle())
+    })
 

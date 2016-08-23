@@ -80,6 +80,15 @@ module.exports = function (containerId, w, h, data, domain) {
       .attr('dy', '.71em')
       .style('text-anchor', 'end')
 
+  if (data.length === 0) {
+    svg.append('g')
+        .append('text')
+          .text('ERROR NO DATA')
+          .attr('y', height / 2)
+          .attr('dx', '.5em')
+          .style('font-size', 20)
+  }
+
   if (labels.length > 1) {
     legend = svg.selectAll('.legend')
         .data(labels.slice().reverse())
