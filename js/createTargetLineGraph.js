@@ -47,6 +47,7 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
           .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
     , focus
+    , legend
 
   data.forEach((d) => {
     d.date = parseDate(d.date)
@@ -171,6 +172,27 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
       .on('mouseover', function () { focus.style('display', null) })
       .on('mouseout', function () { focus.style('display', 'none') })
       .on('mousemove', mousemove)
+
+  // Add legend
+  legend = svg.selectAll('.legend')
+      .data(['Target', containerId.match(/#(\w+)-/)[1]])
+    .enter()
+    .append('g')
+      .attr('class', 'legend')
+      .attr('transform', (d, i) => 'translate(0,' + (-20 + i * 20) + ')')
+
+  legend.append('rect')
+      .attr('x', width * 1.14)
+      .attr('width', 10)
+      .attr('height', 10)
+      .style('fill', (d) => d === 'Target' ? 'black' : 'white')
+
+  legend.append('text')
+      .attr('x', width * 1.12)
+      .attr('y', 5)
+      .attr('dy', '.35em')
+      .style('text-anchor', 'end')
+      .text((d) => d.charAt(0).toUpperCase() + d.slice(1))
 
   function mousemove () {
     var x0 = x.invert(d3.mouse(this)[0])
