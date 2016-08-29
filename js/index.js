@@ -87,6 +87,7 @@ function getSpreadsheetData () {
       data.clientSatisfaction.value = spreadSheetData[pos.CLIENT_SATISFACTION][end - 1]
 
       console.log('Formatted Data', data)
+      console.log('Current Month', currentMonth, currentMonthIndex, start, end)
       getSpreadsheetTargets()
     }
   })
@@ -268,11 +269,12 @@ function formatDual (dates, data) {
 function formatItemVsTarget (dates, target, data, notCumulative) {
   // Strip £ , and turn into monthly target
   let oneMonthTarget = +target.replace(/£|,/g, '')
-    , runningTarget = oneMonthTarget
+    , runningTarget = 0
     , runningRevenueTotal = 0
     , formatted = [ ]
 
   if (notCumulative) {
+    runningTarget = oneMonthTarget
     oneMonthTarget = 0
   } else {
     oneMonthTarget /= 12
