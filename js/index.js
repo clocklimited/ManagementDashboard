@@ -1,6 +1,7 @@
 const createValueBarGraph = require('./createValueBarGraph')
     , createPercentageAreaGraph = require('./createPercentageAreaGraph')
     , createTargetLineGraph = require('./createTargetLineGraph')
+    , createPieChart = require('./createPieChart')
     , addDetails = require('./addDetails')
     , moment = require('moment')
     , pos = require('../lib/positions.json')
@@ -107,6 +108,7 @@ function getSpreadsheetTargets () {
       data.revenueVsTarget = formatItemVsTarget(data.dates, data.target.revenue, data.revenue)
       data.profitVsTarget = formatItemVsTarget(data.dates, data.target.profit, data.profit)
       data.revenuePerHeadVsTarget = formatItemVsTarget(data.dates, data.target.revenuePerHead, data.revenuePerHead, true)
+      data.revenueVsTargetPie = formatPieChart(data.dates, data.target.revenue, data.revenue)
       repopulate()
       calculateStatus()
     }
@@ -127,6 +129,7 @@ function repopulate () {
   createTargetLineGraph('#revenue-vs-target', width, height, data.revenueVsTarget)
   createTargetLineGraph('#profit-vs-target', width, height, data.profitVsTarget)
   createTargetLineGraph('#rph-vs-target', width, height, data.revenuePerHeadVsTarget)
+  createPieChart('#revenue-vs-target-pie', width, height, data.revenueVsTargetPie)
 
   // Sales
   createPercentageAreaGraph('#win-rate', width, height, data.winRate)
@@ -298,8 +301,27 @@ function formatItemVsTarget (dates, target, data, notCumulative) {
   return formatted
 }
 
+function formatPieChart (dates, target, data) {
+  // Get cumulative total of data
+  // Do target - total
+  // Format data like:
+  // [ { label: 'Target', value: 20 }
+  //  ,{ label: 'Value',  value: 40 } ]
+  var revenueTarget = +target.replace(/£|,/g, '')
+    , runningTotal = 0
+    , formatted = [ ]
+
+  dates.forEach(function (item, index) {
+    runningTotal += +validate(data[index], { value: 0 }).value
+  })
+
+  formatted.push({ label: 'Target', value: revenueTarget - runningTotal })
+  formatted.push({ label: 'Value', value: runningTotal })
+  return formatted
+}
+
 function validate (data, fallbackValue) {
-  if (data === '' || data === undefined || data === null) {
+  if (data === '' || data === undefined || data === null || data === '?') {
     return fallbackValue
   } else {
     return data
@@ -307,7 +329,8 @@ function validate (data, fallbackValue) {
 }
 
 function getUrlParameter (name) {
-  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null
+  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(window.location.search)
+    || [null, ''])[1].replace(/\+/g, '%20')) || null
 }
 
 getSpreadsheetData()
