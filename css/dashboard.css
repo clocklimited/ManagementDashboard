@@ -93,7 +93,7 @@ span {
 }
 
 .valueText {
-  fill: black;
+  fill: black !important;
   stroke-width: 1;
   font-size: 18px;
   z-index: 999;
