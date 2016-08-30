@@ -44,12 +44,16 @@ span {
   y: 0;
 }
 
+.legend text {
+  fill: white;
+}
+
 .graph path {
   fill: none;
   stroke-width: 2px;
 }
 
-text {
+.graph text {
   fill: white;
 }
 

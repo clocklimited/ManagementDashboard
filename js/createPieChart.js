@@ -9,6 +9,9 @@ module.exports = function (containerId, w, h, data) {
     , pieColour = d3.scale.linear()
         .domain([0, 1])
         .range(['white', 'black'])
+    , labelColour = d3.scale.linear()
+        .domain([0, 1])
+        .range(['black', 'white'])
 
     , labels = [ ]
 
@@ -18,38 +21,39 @@ module.exports = function (containerId, w, h, data) {
    data.forEach((item) => labels.push(item.label))
 
    var svg = d3.select(containerId)
-      .append('svg:svg')
+      .append('svg')
       .data([data])
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
-      .append('svg:g')
+      .append('g')
         .attr('transform', 'translate(' + (radius + margin.left) + ',' + (radius + margin.top) + ')')
         .attr('width', width)
 
-    var arc = d3.svg.arc()
-        .outerRadius(radius)
+  var arc = d3.svg.arc()
+      .outerRadius(radius)
 
-    var pie = d3.layout.pie()
-        .value((d) => d.value)
+  var pie = d3.layout.pie()
+      .value((d) => d.value)
 
-    var arcs = svg.selectAll('g.slice')
-        .data(pie)
-        .enter()
-            .append('svg:g')
-                .attr('class', 'slice')
+  var arcs = svg.selectAll('g.slice')
+      .data(pie)
+      .enter()
+    .append('g')
+      .attr('class', 'slice')
 
-        arcs.append('svg:path')
-                .attr('fill', (d, i) => pieColour(i))
-                .attr('d', arc)
+  arcs.append('path')
+      .attr('fill', (d, i) => pieColour(i))
+      .attr('d', arc)
 
-        arcs.append('svg:text')
-                .attr('transform', function (d) {
-                d.innerRadius = 0
-                d.outerRadius = radius
-                return 'translate(' + arc.centroid(d) + ')'
-            })
-            .attr('text-anchor', 'middle')
-            .text((d, i) => formatNumber(data[i].value))
+  arcs.append('text')
+      .attr('transform', function (d) {
+        d.innerRadius = 0
+        d.outerRadius = radius
+        return 'translate(' + arc.centroid(d) + ')'
+      })
+      .attr('text-anchor', 'middle')
+      .attr('fill', (d, i) => labelColour(i))
+      .text((d, i) => formatNumber(data[i].value))
 
   if (data.length === 0) {
     svg.append('g')
@@ -61,7 +65,6 @@ module.exports = function (containerId, w, h, data) {
   }
 
   if (labels.length > 1) {
-    console.log(labels)
     var legend = svg.selectAll('.legend')
         .data(labels.slice().reverse())
       .enter()
@@ -74,7 +77,7 @@ module.exports = function (containerId, w, h, data) {
         .attr('y', -radius - 5)
         .attr('width', 10)
         .attr('height', 10)
-        .attr('fill', (d, i) => pieColour(i))
+        .attr('fill', (d, i) => labelColour(i))
 
     legend.append('text')
         .attr('x', width - radius - 6)
