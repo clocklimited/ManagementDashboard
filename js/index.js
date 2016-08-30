@@ -146,8 +146,6 @@ function repopulate () {
   createValueBarGraph('#head-count', width, height, data.headCount)
   createValueBarGraph('#sick-days', width, height, data.sickDays)
   createValueBarGraph('#holiday', width, height, data.holiday)
-  // createPercentageAreaGraph('#staff-satisfaction', width, height, data.staffSatisfaction)
-  // createPercentageAreaGraph('#client-satisfaction', width, height, data.clientSatisfaction)
   addDetails('#staff-satisfaction', width, height / 2, data.staffSatisfaction)
   addDetails('#client-satisfaction', width, height / 2, data.clientSatisfaction)
 }
@@ -177,6 +175,14 @@ function calculateStatus () {
   // RPH vs Target
   addStatus('#rph-vs-target-status', data.revenuePerHeadVsTarget, 'target')
 
+  // Revenue vs Target - pie
+  var tmp = [ {
+    value: data.revenueVsTargetPie[1].value
+    , target: +data.target.revenue.replace(/£|,/g, '')
+  }]
+  addStatus('#revenue-vs-target-pie-status', tmp, 'pie')
+  // addPieStatus('#revenue-vs-target-pie-status', data.target.revenue, data.revenueVsTargetPie[1])
+
   // Closed Deals
   addStatus('#closed-deals-status', data.closedDeals, 'last month')
 
@@ -200,7 +206,7 @@ function addStatus (targetId, data, vs) {
   let length = data.length
     , current
     , currentMonthData
-    , revenue
+    , value
     , target
     , previous
     , difference
@@ -208,15 +214,15 @@ function addStatus (targetId, data, vs) {
     , colour = 'black'
     , fallbackValue = { value: 1, target: 1 }
 
-  if (vs !== 'target') {
+  if (vs === 'target' || vs === 'pie') {
+    currentMonthData = validate(data[length - 1], fallbackValue)
+    value = currentMonthData.value
+    target = currentMonthData.target
+    difference = (value / target) * 100 - (vs === 'pie' ? 0 : 100)
+  } else {
     current = validate(data[length - 1], fallbackValue)
     previous = validate(data[length - 2], fallbackValue)
     difference = ((current.value - previous.value) / Math.abs(previous.value)) * 100
-  } else {
-    currentMonthData = validate(data[length - 1], fallbackValue)
-    revenue = currentMonthData.value
-    target = currentMonthData.target
-    difference = (revenue / target) * 100 - 100
   }
 
   if (difference === 0) {

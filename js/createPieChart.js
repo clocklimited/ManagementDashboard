@@ -8,10 +8,10 @@ module.exports = function (containerId, w, h, data) {
     , formatNumber = d3.format('.2s')
     , pieColour = d3.scale.linear()
         .domain([0, 1])
-        .range(['white', 'black'])
+        .range(['black', 'white'])
     , labelColour = d3.scale.linear()
         .domain([0, 1])
-        .range(['black', 'white'])
+        .range(['white', 'black'])
 
     , labels = [ ]
 
@@ -53,7 +53,7 @@ module.exports = function (containerId, w, h, data) {
       })
       .attr('text-anchor', 'middle')
       .attr('fill', (d, i) => labelColour(i))
-      .text((d, i) => formatNumber(data[i].value))
+      .text((d, i) => '£' + formatNumber(data[i].value))
 
   if (data.length === 0) {
     svg.append('g')
