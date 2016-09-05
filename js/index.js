@@ -109,6 +109,7 @@ function getSpreadsheetTargets () {
       data.profitVsTarget = formatItemVsTarget(data.dates, data.target.profit, data.profit)
       data.revenuePerHeadVsTarget = formatItemVsTarget(data.dates, data.target.revenuePerHead, data.revenuePerHead, true)
       data.revenueVsTargetPie = formatPieChart(data.dates, data.target.revenue, data.revenue)
+      data.profitVsTargetPie = formatPieChart(data.dates, data.target.profit, data.profit)
       repopulate()
       calculateStatus()
     }
@@ -130,6 +131,7 @@ function repopulate () {
   createTargetLineGraph('#profit-vs-target', width, height, data.profitVsTarget)
   createTargetLineGraph('#rph-vs-target', width, height, data.revenuePerHeadVsTarget)
   createPieChart('#revenue-vs-target-pie', width, height, data.revenueVsTargetPie)
+  createPieChart('#profit-vs-target-pie', width, height, data.profitVsTargetPie)
 
   // Sales
   createPercentageAreaGraph('#win-rate', width, height, data.winRate)

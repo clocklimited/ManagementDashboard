@@ -14,8 +14,9 @@ html
       button.flat-button(id='interactivityToggle') Toggle Interactivity
       span#date 
         input(id='monthPicker', style='width: 0px;')
+
+    h2.finance Finance
     #finance.row
-      h2 Finance
       #revenue.graph
         h3 Revenue 
           span#revenue-status
@@ -42,8 +43,12 @@ html
       #revenue-vs-target-pie.pie
         h3 Revenue VS Target
           span#revenue-vs-target-pie-status.status
+      #profit-vs-target-pie.pie(style='display: none;')
+        h3 Profit VS Target
+          span#profit-vs-target-pie-status.status
+
+    h2.sales-section Sales
     #sales-section.row
-      h2 Sales
       #win-rate.graph
         h3 Win Rate 
           span#win-rate-status.status
@@ -56,12 +61,14 @@ html
       #pipeline.graph
         h3 Pipeline 
           span#pipeline-status.status
+
+    h2.production Production
     #production.row
-      h2 Production
       #tickets.graph
         h3 Tickets
+
+    h2.human-resources HR
     #human-resources.half.row
-      h2 HR
       #head-count.graph
         h3  Head Count
       #holiday.graph
@@ -133,5 +140,21 @@ html
     , OnAfterMenuClose: function() {
       window.location.href = window.location.origin + '?month=' + $("#monthPicker").val()
     }
-    });
+    })
+
+    $('.finance').on('click', function () {
+      $('#finance').slideToggle('slow')
+    })
+
+    $('.sales-section').on('click', function () {
+      $('#sales-section').slideToggle('slow')
+    })
+
+    $('.production').on('click', function () {
+      $('#production').slideToggle('slow')
+    })
+
+    $('.human-resources').on('click', function () {
+      $('#human-resources').slideToggle('slow')
+    })
 
