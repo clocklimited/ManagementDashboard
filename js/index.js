@@ -175,13 +175,8 @@ function calculateStatus () {
   // RPH vs Target
   addStatus('#rph-vs-target-status', data.revenuePerHeadVsTarget, 'target')
 
-  // Revenue vs Target - pie
-  var tmp = [ {
-    value: data.revenueVsTargetPie[1].value
-    , target: +data.target.revenue.replace(/£|,/g, '')
-  }]
-  addStatus('#revenue-vs-target-pie-status', tmp, 'pie')
-  // addPieStatus('#revenue-vs-target-pie-status', data.target.revenue, data.revenueVsTargetPie[1])
+  // Revenue vs Target - Pie
+  addPieStatus('#revenue-vs-target-pie-status', data.target.revenue, data.revenueVsTargetPie[1])
 
   // Closed Deals
   addStatus('#closed-deals-status', data.closedDeals, 'last month')
@@ -214,21 +209,18 @@ function addStatus (targetId, data, vs) {
     , colour = 'black'
     , fallbackValue = { value: 1, target: 1 }
 
-  if (vs === 'target' || vs === 'pie') {
+  if (vs === 'target') {
     currentMonthData = validate(data[length - 1], fallbackValue)
     value = currentMonthData.value
     target = currentMonthData.target
-    difference = (value / target) * 100 - (vs === 'pie' ? 0 : 100)
+    difference = (value / target) * 100 - 100
   } else {
     current = validate(data[length - 1], fallbackValue)
     previous = validate(data[length - 2], fallbackValue)
     difference = ((current.value - previous.value) / Math.abs(previous.value)) * 100
   }
 
-  if (vs === 'pie') {
-    arrow = '&#8212;' // Dash
-    colour = 'black'
-  } else if (difference === 0) {
+  if (difference === 0) {
     arrow = '&#8212;' // Dash
     colour = 'black'
   } else if (difference > 0) {
@@ -238,6 +230,22 @@ function addStatus (targetId, data, vs) {
     arrow = '&#x25BC;' // Down arrow
     colour = 'rgb(210, 8, 8)'
   }
+  $(targetId)
+    .html(arrow + ' ' + difference.toFixed(2) + '%')
+    .css('color', colour)
+}
+
+function addPieStatus (targetId, target, data) {
+  var currentValue
+    , difference
+    , arrow = '&#8212;' // Dash
+    , colour = 'black'
+    , fallbackValue = { value: 1 }
+
+  currentValue = validate(data, fallbackValue).value
+  target = +target.replace(/£|,/g, '')
+  difference = (currentValue / target) * 100
+
   $(targetId)
     .html(arrow + ' ' + difference.toFixed(2) + '%')
     .css('color', colour)
