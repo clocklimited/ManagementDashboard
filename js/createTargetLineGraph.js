@@ -1,11 +1,12 @@
 module.exports = function createTargetLineGraph (containerId, w, h, data) {
 
   let margin = {
-      top: 20
-    , right: 70
-    , bottom: 30
-    , left: 40
+      top: (h / 100) * 10//6.956522 //20
+    , right: (w / 100) * 10//15.217391 //70
+    , bottom: (h / 100) * 10.434783 //30
+    , left: (w / 100) * 12//8.695652 //40
     }
+
     , width = w - margin.left - margin.right
     , height = h - margin.top - margin.bottom
 
@@ -182,14 +183,15 @@ module.exports = function createTargetLineGraph (containerId, w, h, data) {
       .attr('transform', (d, i) => 'translate(0,' + (-20 + i * 20) + ')')
 
   legend.append('rect')
-      .attr('x', width * 1.14)
+      .attr('x', width + margin.right - 20)
       .attr('width', 10)
       .attr('height', 10)
       .style('fill', (d) => d === 'Target' ? 'black' : 'white')
 
   legend.append('text')
-      .attr('x', width * 1.12)
+      .attr('x', width + margin.right - 30)
       .attr('y', 5)
+      .attr('dx', '.55em')
       .attr('dy', '.35em')
       .style('text-anchor', 'end')
       .text((d) => d.charAt(0).toUpperCase() + d.slice(1))

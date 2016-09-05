@@ -225,7 +225,10 @@ function addStatus (targetId, data, vs) {
     difference = ((current.value - previous.value) / Math.abs(previous.value)) * 100
   }
 
-  if (difference === 0) {
+  if (vs === 'pie') {
+    arrow = '&#8212;' // Dash
+    colour = 'black'
+  } else if (difference === 0) {
     arrow = '&#8212;' // Dash
     colour = 'black'
   } else if (difference > 0) {
@@ -277,7 +280,7 @@ function formatDual (dates, data) {
 
 function formatItemVsTarget (dates, target, data, notCumulative) {
   // Strip £ , and turn into monthly target
-  let oneMonthTarget = +target.replace(/£|,/g, '')
+  let oneMonthTarget = validate(+target.replace(/£|,/g, ''), 0)
     , runningTarget = 0
     , runningRevenueTotal = 0
     , formatted = [ ]
@@ -313,7 +316,7 @@ function formatPieChart (dates, target, data) {
   // Format data like:
   // [ { label: 'Target', value: 20 }
   //  ,{ label: 'Value',  value: 40 } ]
-  var revenueTarget = +target.replace(/£|,/g, '')
+  var revenueTarget = validate(+target.replace(/£|,/g, ''), 0)
     , runningTotal = 0
     , formatted = [ ]
 
@@ -327,7 +330,7 @@ function formatPieChart (dates, target, data) {
 }
 
 function validate (data, fallbackValue) {
-  if (data === '' || data === undefined || data === null || data === '?') {
+  if (data === '' || data === '?' || data === undefined || data === null) {
     return fallbackValue
   } else {
     return data
