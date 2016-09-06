@@ -2,6 +2,8 @@ const createValueBarGraph = require('./createValueBarGraph')
     , createPercentageAreaGraph = require('./createPercentageAreaGraph')
     , createTargetLineGraph = require('./createTargetLineGraph')
     , createPieChart = require('./createPieChart')
+    , gpie = require('./createPieChartGoogle')
+    , gchart = require('./createBarGraphGoogle')
     , addDetails = require('./addDetails')
     , moment = require('moment')
     , pos = require('../lib/positions.json')
@@ -63,13 +65,13 @@ function getSpreadsheetData () {
       data.dates = spreadSheetData[pos.MONTH].slice(start, end)
       data.dates = data.dates.map((date) => moment(date, 'MMMM YYYY').format('MMM YY'))
       // FINANCE
-      data.revenue = format(data.dates, spreadSheetData[pos.REVENUE].slice(start, end))
-      data.profit = format(data.dates, spreadSheetData[pos.PROFIT].slice(start, end))
+      data.revenue = formatGoogle(data.dates, spreadSheetData[pos.REVENUE].slice(start, end))
+      data.profit = formatGoogle(data.dates, spreadSheetData[pos.PROFIT].slice(start, end))
       data.costs.staff = spreadSheetData[pos.COSTS_STAFF].slice(start, end)
       data.costs.total = spreadSheetData[pos.COSTS_TOTAL].slice(start, end)
       data.costs = formatDual(data.dates, data.costs)
-      data.annuity = format(data.dates, spreadSheetData[pos.ANNUITY].slice(start, end))
-      data.revenuePerHead = format(data.dates, spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
+      data.annuity = formatGoogle(data.dates, spreadSheetData[pos.ANNUITY].slice(start, end))
+      data.revenuePerHead = formatGoogle(data.dates, spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
       // data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
       // SALES
       data.winRate = format(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
@@ -119,19 +121,20 @@ function getSpreadsheetTargets () {
 function repopulate () {
   let width = Math.floor(($(window).width() - 80) / 4) //480//320
     , height = width / 1.6 //300//200
+    , colour = '#444444'
 
   // Finance
-  createValueBarGraph('#revenue', width, height, data.revenue)
-  createValueBarGraph('#profit', width, height, data.profit)
+  gchart('revenue', colour, width, height, data.revenue)
+  gchart('profit', colour, width, height, data.profit)
   createValueBarGraph('#costs', width, height, data.costs)
-  createValueBarGraph('#annuity', width, height, data.annuity)
-  createValueBarGraph('#revenue-per-head', width, height, data.revenuePerHead)
+  gchart('annuity', colour, width, height, data.annuity)
+  gchart('revenue-per-head', colour, width, height, data.revenuePerHead)
   // createValueBarGraph('#staff-turnover', width, height, data.staffTurnover)
   createTargetLineGraph('#revenue-vs-target', width, height, data.revenueVsTarget)
   createTargetLineGraph('#profit-vs-target', width, height, data.profitVsTarget)
   createTargetLineGraph('#rph-vs-target', width, height, data.revenuePerHeadVsTarget)
-  createPieChart('#revenue-vs-target-pie', width, height, data.revenueVsTargetPie)
-  createPieChart('#profit-vs-target-pie', width, height, data.profitVsTargetPie)
+  gpie('revenue-vs-target-pie', '#444444', width, height, data.revenueVsTargetPie)
+  // createPieChart('#profit-vs-target-pie', width, height, data.profitVsTargetPie)
 
   // Sales
   createPercentageAreaGraph('#win-rate', width, height, data.winRate)
@@ -154,16 +157,16 @@ function repopulate () {
 
 function calculateStatus () {
   // Revenue
-  addStatus('#revenue-status', data.revenue, 'last month')
+  addStatusGoogle('#revenue-status', data.revenue, 'last month')
 
   // Profit
-  addStatus('#profit-status', data.profit, 'last month')
+  addStatusGoogle('#profit-status', data.profit, 'last month')
 
   // Annuity
-  addStatus('#annuity-status', data.annuity, 'last month')
+  addStatusGoogle('#annuity-status', data.annuity, 'last month')
 
   // Revenue Per Head
-  addStatus('#revenue-per-head-status', data.revenuePerHead, 'last month')
+  addStatusGoogle('#revenue-per-head-status', data.revenuePerHead, 'last month')
 
   // Staff Turnover
   // addStatus('#staff-turnover-status', data.staffTurnover, 'last month')
@@ -178,7 +181,7 @@ function calculateStatus () {
   addStatus('#rph-vs-target-status', data.revenuePerHeadVsTarget, 'target')
 
   // Revenue vs Target - Pie
-  addPieStatus('#revenue-vs-target-pie-status', data.target.revenue, data.revenueVsTargetPie[1])
+  addPieStatus('#revenue-vs-target-pie-status', data.target.revenue, data.revenueVsTargetPie)
 
   // Closed Deals
   addStatus('#closed-deals-status', data.closedDeals, 'last month')
@@ -217,6 +220,7 @@ function addStatus (targetId, data, vs) {
     target = currentMonthData.target
     difference = (value / target) * 100 - 100
   } else {
+    console.log(data)
     current = validate(data[length - 1], fallbackValue)
     previous = validate(data[length - 2], fallbackValue)
     difference = ((current.value - previous.value) / Math.abs(previous.value)) * 100
@@ -237,14 +241,52 @@ function addStatus (targetId, data, vs) {
     .css('color', colour)
 }
 
-function addPieStatus (targetId, target, data) {
-  var currentValue
+function addStatusGoogle (targetId, dataSet, vs) {
+  let length = dataSet.getNumberOfRows()
+    , current
+    , currentMonthData
+    , value
+    , target
+    , previous
     , difference
     , arrow = '&#8212;' // Dash
     , colour = 'black'
-    , fallbackValue = { value: 1 }
+    , fallbackValue = { value: 1, target: 1 }
 
-  currentValue = validate(data, fallbackValue).value
+  if (vs === 'target') {
+    currentMonthData = validate(dataSet[length - 1], fallbackValue)
+    value = currentMonthData.value
+    target = currentMonthData.target
+    difference = (value / target) * 100 - 100
+  } else { // Last month
+    console.log(dataSet)
+    current = dataSet.getValue(length - 1, 1)
+    previous = dataSet.getValue(length - 2, 1)
+    difference = ((current - previous) / Math.abs(previous)) * 100
+    console.log(current, previous, difference)
+  }
+
+  if (difference === 0) {
+    arrow = '&#8212;' // Dash
+    colour = 'black'
+  } else if (difference > 0) {
+    arrow = '&#x25B2;' // Up arrow
+    colour = 'rgb(10, 220, 10)'
+  } else if (difference < 0) {
+    arrow = '&#x25BC;' // Down arrow
+    colour = 'rgb(210, 8, 8)'
+  }
+  $(targetId)
+    .html(arrow + ' ' + difference.toFixed(2) + '%')
+    .css('color', colour)
+}
+
+function addPieStatus (targetId, target, dataSet) {
+  var currentValue = dataSet.getValue(1, 1)
+    , difference
+    , arrow = '&#8212;' // Dash
+    , colour = 'black'
+
   target = +target.replace(/£|,/g, '')
   difference = (currentValue / target) * 100
 
@@ -266,6 +308,22 @@ function format (dates, data) {
     })
   })
   return formatted
+}
+
+function formatGoogle (dates, dataSet) {
+  let formatted = [ [
+      { label: 'Date', type: 'string' }
+    , { label: 'Value', type: 'number' }
+  ] ]
+
+  dataSet.forEach((item, index) => {
+    if (typeof item === 'string') {
+      item = item.replace(/£|,/g, '')
+    }
+    formatted.push([ dates[index], +validate(item, 0) ])
+  })
+  var dataTable = google.visualization.arrayToDataTable(formatted)
+  return dataTable
 }
 
 function formatDual (dates, data) {
@@ -320,7 +378,7 @@ function formatItemVsTarget (dates, target, data, notCumulative) {
   return formatted
 }
 
-function formatPieChart (dates, target, data) {
+function formatPieChart (dates, target, dataSet) {
   // Get cumulative total of data
   // Do target - total
   // Format data like:
@@ -328,15 +386,17 @@ function formatPieChart (dates, target, data) {
   //  ,{ label: 'Value',  value: 40 } ]
   var revenueTarget = validate(+target.replace(/£|,/g, ''), 0)
     , runningTotal = 0
-    , formatted = [ ]
-
+    console.log(dataSet)
   dates.forEach(function (item, index) {
-    runningTotal += +validate(data[index], { value: 0 }).value
+    runningTotal += dataSet.getValue(index, 1)
   })
 
-  formatted.push({ label: 'Target', value: revenueTarget - runningTotal })
-  formatted.push({ label: 'Value', value: runningTotal })
-  return formatted
+  var dataTable = google.visualization.arrayToDataTable([
+      [ 'Type', 'Value' ]
+    , [ 'Target', revenueTarget - runningTotal ]
+    , [ 'Value', runningTotal ]
+  ])
+  return dataTable
 }
 
 function validate (data, fallbackValue) {
@@ -352,4 +412,5 @@ function getUrlParameter (name) {
     || [null, ''])[1].replace(/\+/g, '%20')) || null
 }
 
-getSpreadsheetData()
+google.charts.load('current', { packages: [ 'corechart' ] })
+google.charts.setOnLoadCallback(getSpreadsheetData)
