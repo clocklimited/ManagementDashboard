@@ -4,6 +4,7 @@ const createValueBarGraph = require('./createValueBarGraph')
     , createPieChart = require('./createPieChart')
     , gpie = require('./createPieChartGoogle')
     , gchart = require('./createBarGraphGoogle')
+    , gline = require('./createLineGraphGoogle')
     , addDetails = require('./addDetails')
     , moment = require('moment')
     , pos = require('../lib/positions.json')
@@ -107,9 +108,9 @@ function getSpreadsheetTargets () {
       data.target.revenuePerHead = spreadSheetTargets[pos.TARGETS.REVENUE_PER_HEAD][1]
       data.staffSatisfaction.target = spreadSheetTargets[pos.TARGETS.STAFF_SATISFACTION][1]
       data.clientSatisfaction.target = spreadSheetTargets[pos.TARGETS.CLIENT_SATISFACTION][1]
-      data.revenueVsTarget = formatItemVsTarget(data.dates, data.target.revenue, data.revenue)
-      data.profitVsTarget = formatItemVsTarget(data.dates, data.target.profit, data.profit)
-      data.revenuePerHeadVsTarget = formatItemVsTarget(data.dates, data.target.revenuePerHead, data.revenuePerHead, true)
+      data.revenueVsTarget = formatItemVsTargetGoogle(data.dates, data.target.revenue, data.revenue)
+      data.profitVsTarget = formatItemVsTargetGoogle(data.dates, data.target.profit, data.profit)
+      data.revenuePerHeadVsTarget = formatItemVsTargetGoogle(data.dates, data.target.revenuePerHead, data.revenuePerHead, true)
       data.revenueVsTargetPie = formatPieChart(data.dates, data.target.revenue, data.revenue)
       data.profitVsTargetPie = formatPieChart(data.dates, data.target.profit, data.profit)
       repopulate()
@@ -130,9 +131,9 @@ function repopulate () {
   gchart('annuity', colour, width, height, data.annuity)
   gchart('revenue-per-head', colour, width, height, data.revenuePerHead)
   // createValueBarGraph('#staff-turnover', width, height, data.staffTurnover)
-  createTargetLineGraph('#revenue-vs-target', width, height, data.revenueVsTarget)
-  createTargetLineGraph('#profit-vs-target', width, height, data.profitVsTarget)
-  createTargetLineGraph('#rph-vs-target', width, height, data.revenuePerHeadVsTarget)
+  gline('revenue-vs-target', colour, width, height, data.revenueVsTarget)
+  gline('profit-vs-target', colour, width, height, data.profitVsTarget)
+  gline('rph-vs-target', colour, width, height, data.revenuePerHeadVsTarget)
   gpie('revenue-vs-target-pie', '#444444', width, height, data.revenueVsTargetPie)
   // createPieChart('#profit-vs-target-pie', width, height, data.profitVsTargetPie)
 
@@ -172,13 +173,13 @@ function calculateStatus () {
   // addStatus('#staff-turnover-status', data.staffTurnover, 'last month')
 
   // Revenue vs Target
-  addStatus('#revenue-vs-target-status', data.revenueVsTarget, 'target')
+  addStatusGoogle('#revenue-vs-target-status', data.revenueVsTarget, 'target')
 
   // Profit vs Target
-  addStatus('#profit-vs-target-status', data.profitVsTarget, 'target')
+  addStatusGoogle('#profit-vs-target-status', data.profitVsTarget, 'target')
 
   // RPH vs Target
-  addStatus('#rph-vs-target-status', data.revenuePerHeadVsTarget, 'target')
+  addStatusGoogle('#rph-vs-target-status', data.revenuePerHeadVsTarget, 'target')
 
   // Revenue vs Target - Pie
   addPieStatus('#revenue-vs-target-pie-status', data.target.revenue, data.revenueVsTargetPie)
@@ -244,20 +245,18 @@ function addStatus (targetId, data, vs) {
 function addStatusGoogle (targetId, dataSet, vs) {
   let length = dataSet.getNumberOfRows()
     , current
-    , currentMonthData
     , value
     , target
     , previous
     , difference
     , arrow = '&#8212;' // Dash
     , colour = 'black'
-    , fallbackValue = { value: 1, target: 1 }
 
   if (vs === 'target') {
-    currentMonthData = validate(dataSet[length - 1], fallbackValue)
-    value = currentMonthData.value
-    target = currentMonthData.target
+    value = dataSet.getValue(length - 1, 2)
+    target = dataSet.getValue(length - 1, 1)
     difference = (value / target) * 100 - 100
+    console.log(value, target)
   } else { // Last month
     console.log(dataSet)
     current = dataSet.getValue(length - 1, 1)
@@ -277,7 +276,7 @@ function addStatusGoogle (targetId, dataSet, vs) {
     colour = 'rgb(210, 8, 8)'
   }
   $(targetId)
-    .html(arrow + ' ' + difference.toFixed(2) + '%')
+    .html(arrow + ' ' + (Math.abs(difference) > 99 ? difference.toFixed(1) : difference.toFixed(2)) + '%')
     .css('color', colour)
 }
 
@@ -376,6 +375,39 @@ function formatItemVsTarget (dates, target, data, notCumulative) {
   } ]
   */
   return formatted
+}
+
+function formatItemVsTargetGoogle (dates, target, data, notCumulative) {
+  // Strip £ , and turn into monthly target
+  let oneMonthTarget = validate(+target.replace(/£|,/g, ''), 0)
+    , runningTarget = 0
+    , runningRevenueTotal = 0
+    , formatted = [ [ 'Date', 'Target', 'Value' ] ]
+
+  if (notCumulative) {
+    runningTarget = oneMonthTarget
+    oneMonthTarget = 0
+  } else {
+    oneMonthTarget /= 12
+  }
+  dates.forEach(function (item, index) {
+    runningTarget += oneMonthTarget
+    runningRevenueTotal += data.getValue(index, 1)
+    formatted.push([
+        item
+      , runningTarget
+      , runningRevenueTotal
+    ])
+  })
+
+  /*
+  [ { date: date
+    , target: target
+    , revenue: revenue
+  } ]
+  */
+  var dataTable = google.visualization.arrayToDataTable(formatted)
+  return dataTable
 }
 
 function formatPieChart (dates, target, dataSet) {

@@ -1,9 +1,9 @@
-module.exports = function createBarGraph (containerId, colour, w, h, data) {
+module.exports = function createTargetLineGraphs (containerId, colour, w, h, data) {
   var options = {
       width: w
     , height: h
     , backgroundColor: colour
-    , colors: [ 'white' ]
+    , colors: [ 'black', 'white' ]
     , vAxis: {
         format: 'short'
     }
@@ -15,10 +15,11 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
       , height: '75%'
     }
     , legend: {
-        position: 'none'
+        position: 'top'
+      , alignment: 'end'
     }
   }
 
-  var chart = new google.visualization.ColumnChart(document.getElementById(containerId))
+  var chart = new google.visualization.LineChart(document.getElementById(containerId))
   chart.draw(data, options)
 }
