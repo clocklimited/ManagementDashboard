@@ -3,22 +3,16 @@ module.exports = function addDetails (containerId, w, h, data) {
   $(containerId + '-target').html(data.target)
   $(containerId + '-value').html(data.value)
 
-  addStatus(containerId + '-status', [ data ])
+  addStatus(containerId + '-status', data)
 }
 
 function addStatus (targetId, data) {
-  let length = data.length
-    , currentMonthData
-    , value
-    , target
-    , difference
+  var difference
     , arrow = '&#8212;' // Dash
     , colour = 'black'
 
-  currentMonthData = data[length - 1] || { value: 1, target: 1 }
-  value = currentMonthData.value
-  target = currentMonthData.target
-  difference = (value / target) * 100 - 100
+  data = data || { value: 1, target: 1 }
+  difference = (data.value / data.target) * 100 - 100
 
   if (difference === 0) {
     arrow = '&#8212;' // Dash
