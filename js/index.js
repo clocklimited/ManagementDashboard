@@ -110,7 +110,7 @@ function getSpreadsheetTargets () {
       data.revenueVsTargetPie = formatPieChart(data.dates, data.target.revenue, data.revenue)
       data.profitVsTargetPie = formatPieChart(data.dates, data.target.profit, data.profit)
       repopulate()
-      calculateStatus()
+      // calculateStatus()
     }
   })
 }
@@ -153,139 +153,6 @@ function repopulate () {
   createBarGraph('holiday', colour, width, height, data.holiday)
   addDetails('#staff-satisfaction', width, height / 2, data.staffSatisfaction)
   addDetails('#client-satisfaction', width, height / 2, data.clientSatisfaction)
-}
-
-function calculateStatus () {
-  // Revenue
-  addStatus('#revenue-status', data.revenue, 'last month')
-
-  // Profit
-  addStatus('#profit-status', data.profit, 'last month')
-
-  // Annuity
-  addStatus('#annuity-status', data.annuity, 'last month')
-
-  // Revenue Per Head
-  addStatus('#revenue-per-head-status', data.revenuePerHead, 'last month')
-
-  // Staff Turnover
-  // addStatus('#staff-turnover-status', data.staffTurnover, 'last month')
-
-  // Revenue vs Target
-  addStatus('#revenue-vs-target-status', data.revenueVsTarget, 'target')
-
-  // Profit vs Target
-  addStatus('#profit-vs-target-status', data.profitVsTarget, 'target')
-
-  // RPH vs Target
-  addStatus('#rph-vs-target-status', data.revenuePerHeadVsTarget, 'target')
-
-  // Revenue vs Target - Pie
-  addPieStatus('#revenue-vs-target-pie-status', data.target.revenue, data.revenueVsTargetPie)
-
-  // Closed Deals
-  addStatus('#closed-deals-status', data.closedDeals, 'last month')
-
-  // Leads
-  addStatus('#leads-status', data.leads, 'last month')
-
-  // Win Rate
-  addStatus('#win-rate-status', data.winRate, 'last month')
-
-  // Pipeline
-  addStatus('#pipeline-status', data.pipeline, 'last month')
-
-  // Staff Satisfaction
-  addStatusOld('#staff-satisfaction-status', [ data.staffSatisfaction ])
-
-  // Client Satisfaction
-  addStatusOld('#client-satisfaction-status', [ data.clientSatisfaction ])
-}
-
-function addStatusOld (targetId, data) {
-  let length = data.length
-    , currentMonthData
-    , value
-    , target
-    , difference
-    , arrow = '&#8212;' // Dash
-    , colour = 'black'
-    , fallbackValue = { value: 1, target: 1 }
-
-  currentMonthData = validate(data[length - 1], fallbackValue)
-  value = currentMonthData.value
-  target = currentMonthData.target
-  difference = (value / target) * 100 - 100
-
-  if (difference === 0) {
-    arrow = '&#8212;' // Dash
-    colour = 'black'
-  } else if (difference > 0) {
-    arrow = '&#x25B2;' // Up arrow
-    colour = 'rgb(10, 220, 10)'
-  } else if (difference < 0) {
-    arrow = '&#x25BC;' // Down arrow
-    colour = 'rgb(210, 8, 8)'
-  }
-  $(targetId)
-    .html(arrow + ' ' + difference.toFixed(2) + '%')
-    .css('color', colour)
-}
-
-function addStatus (targetId, dataSet, vs) {
-  let length = dataSet.getNumberOfRows()
-    , current
-    , value
-    , target
-    , previous
-    , difference
-    , arrow = '&#8212;' // Dash
-    , colour = 'black'
-
-  if (length === 0) {
-    return
-  }
-
-  if (vs === 'target') {
-    value = dataSet.getValue(length - 1, 2)
-    target = dataSet.getValue(length - 1, 1)
-    difference = (value / target) * 100 - 100
-    console.log(value, target)
-  } else { // Last month
-    console.log(dataSet)
-    current = dataSet.getValue(length - 1, 1)
-    previous = dataSet.getValue(length - 2, 1)
-    difference = ((current - previous) / Math.abs(previous)) * 100
-    console.log(current, previous, difference)
-  }
-
-  if (difference === 0) {
-    arrow = '&#8212;' // Dash
-    colour = 'black'
-  } else if (difference > 0) {
-    arrow = '&#x25B2;' // Up arrow
-    colour = 'rgb(10, 220, 10)'
-  } else if (difference < 0) {
-    arrow = '&#x25BC;' // Down arrow
-    colour = 'rgb(210, 8, 8)'
-  }
-  $(targetId)
-    .html(arrow + ' ' + difference.toFixed(1) + '%')
-    .css('color', colour)
-}
-
-function addPieStatus (targetId, target, dataSet) {
-  var currentValue = dataSet.getValue(1, 1)
-    , difference
-    , arrow = '&#8212;' // Dash
-    , colour = 'black'
-
-  target = +target.replace(/£|,/g, '')
-  difference = (currentValue / target) * 100
-
-  $(targetId)
-    .html(arrow + ' ' + difference.toFixed(2) + '%')
-    .css('color', colour)
 }
 
 function format (dates, dataSet) {
@@ -349,9 +216,10 @@ function formatPieChart (dates, target, dataSet) {
     runningTotal += dataSet.getValue(index, 1)
   })
 
+
   var dataTable = google.visualization.arrayToDataTable([
       [ 'Type', 'Value' ]
-    , [ 'Target', revenueTarget - runningTotal ]
+    , [ 'Target', (revenueTarget - runningTotal) ]
     , [ 'Value', runningTotal ]
   ])
   return dataTable

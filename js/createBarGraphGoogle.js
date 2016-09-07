@@ -1,3 +1,5 @@
+const addStatus = require('./addStatus')
+
 module.exports = function createBarGraph (containerId, colour, w, h, data) {
   var options = {
       width: w
@@ -6,6 +8,7 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
     , colors: [ 'white', 'black' ]
     , vAxis: {
         format: 'short'
+      , minValue: 0
     }
     , fontSize: 12
     , chartArea: {
@@ -22,4 +25,7 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
 
   var chart = new google.visualization.ColumnChart(document.getElementById(containerId))
   chart.draw(data, options)
+
+  addStatus(`#${containerId}-status`, data)
 }
+

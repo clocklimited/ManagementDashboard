@@ -1,3 +1,5 @@
+const addStatus = require('./addStatus')
+
 module.exports = function (containerId, colour, w, h, data) {
   var options = {
       pieSliceText: 'value'
@@ -17,8 +19,11 @@ module.exports = function (containerId, colour, w, h, data) {
         , fontSize: '1.5em'
       }
     }
+    , slices: { 1: { offset: 0.1 } }
   }
 
   var chart = new google.visualization.PieChart(document.getElementById(containerId))
   chart.draw(data, options)
+
+  addStatus(`#${containerId}-status`, data)
 }

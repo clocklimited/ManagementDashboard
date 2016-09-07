@@ -1,3 +1,5 @@
+const addStatus = require('./addStatus')
+
 module.exports = function createTargetLineGraphs (containerId, colour, w, h, data) {
   var options = {
       width: w
@@ -6,6 +8,7 @@ module.exports = function createTargetLineGraphs (containerId, colour, w, h, dat
     , colors: [ 'black', 'white' ]
     , vAxis: {
         format: 'short'
+      , minValue: 0
     }
     , fontSize: 12
     , chartArea: {
@@ -22,4 +25,6 @@ module.exports = function createTargetLineGraphs (containerId, colour, w, h, dat
 
   var chart = new google.visualization.LineChart(document.getElementById(containerId))
   chart.draw(data, options)
+
+  addStatus(`#${containerId}-status`, data)
 }

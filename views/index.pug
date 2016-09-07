@@ -9,7 +9,6 @@ html
   body
     h1 Clock Management Dashboard
     #buttons.row
-      button.flat-button.js-value-toggle Toggle Values
       button.flat-button.js-zoom-toggle Toggle Zoom
       span#date 
         input.js-month-picker(style='width: 0px;')
@@ -50,8 +49,8 @@ html
         #rph-vs-target.graph
       .group
         h3 Revenue VS Target
-        #revenue-vs-target-pie.pie
           span#revenue-vs-target-pie-status.status
+        #revenue-vs-target-pie.pie
       .group
         #profit-vs-target-pie.pie(style='display: none;')
           h3 Profit VS Target
@@ -164,11 +163,6 @@ html
         }
       })
     }
-
-    $('.js-value-toggle').on('click', function () {
-      $('.valueText').each((i, e) => $(e).toggle())
-    })
-
 
     $('.js-zoom-toggle').on('click', function () {
       events = $._data($('.graph')[0], "events")
