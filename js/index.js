@@ -23,12 +23,12 @@ let spreadSheetData = [ ]
       , value: [ ]
     }
     , tickets: {
-          opened: [ ]
-        , closed: [ ]
+          Opened: [ ]
+        , Closed: [ ]
       }
     , costs: {
-        staff: [ ]
-      , total: [ ]
+        Staff: [ ]
+      , Total: [ ]
     }
     , target: {
         revenue: 0
@@ -62,27 +62,27 @@ function getSpreadsheetData () {
       data.dates = spreadSheetData[pos.MONTH].slice(start, end)
       data.dates = data.dates.map((date) => moment(date, 'MMMM YYYY').format('MMM YY'))
       // FINANCE
-      data.revenue = formatGoogle(data.dates, spreadSheetData[pos.REVENUE].slice(start, end))
-      data.profit = formatGoogle(data.dates, spreadSheetData[pos.PROFIT].slice(start, end))
-      data.costs.staff = spreadSheetData[pos.COSTS_STAFF].slice(start, end)
-      data.costs.total = spreadSheetData[pos.COSTS_TOTAL].slice(start, end)
-      data.costs = formatDualGoogle(data.dates, data.costs)
-      data.annuity = formatGoogle(data.dates, spreadSheetData[pos.ANNUITY].slice(start, end))
-      data.revenuePerHead = formatGoogle(data.dates, spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
+      data.revenue = format(data.dates, spreadSheetData[pos.REVENUE].slice(start, end))
+      data.profit = format(data.dates, spreadSheetData[pos.PROFIT].slice(start, end))
+      data.costs.Staff = spreadSheetData[pos.COSTS_STAFF].slice(start, end)
+      data.costs.Total = spreadSheetData[pos.COSTS_TOTAL].slice(start, end)
+      data.costs = formatDual(data.dates, data.costs)
+      data.annuity = format(data.dates, spreadSheetData[pos.ANNUITY].slice(start, end))
+      data.revenuePerHead = format(data.dates, spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
       // data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
       // SALES
-      data.winRate = formatGoogle(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
-      data.closedDeals = formatGoogle(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
-      data.leads = formatGoogle(data.dates, spreadSheetData[pos.LEADS].slice(start, end))
-      data.pipeline = formatGoogle(data.dates, spreadSheetData[pos.PIPELINE].slice(start, end))
+      data.winRate = format(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
+      data.closedDeals = format(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
+      data.leads = format(data.dates, spreadSheetData[pos.LEADS].slice(start, end))
+      data.pipeline = format(data.dates, spreadSheetData[pos.PIPELINE].slice(start, end))
       // PRODUCTION
-      data.tickets.opened = spreadSheetData[pos.TICKETS_OPENED].slice(start, end)
-      data.tickets.closed = spreadSheetData[pos.TICKETS_CLOSED].slice(start, end)
-      data.tickets = formatDualGoogle(data.dates, data.tickets)
+      data.tickets.Opened = spreadSheetData[pos.TICKETS_OPENED].slice(start, end)
+      data.tickets.Closed = spreadSheetData[pos.TICKETS_CLOSED].slice(start, end)
+      data.tickets = formatDual(data.dates, data.tickets)
       // HR
-      data.headCount = formatGoogle(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
-      data.sickDays = formatGoogle(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
-      data.holiday = formatGoogle(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
+      data.headCount = format(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
+      data.sickDays = format(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
+      data.holiday = format(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
       data.staffSatisfaction.value = spreadSheetData[pos.STAFF_SATISFACTION][end - 1]
       data.clientSatisfaction.value = spreadSheetData[pos.CLIENT_SATISFACTION][end - 1]
 
@@ -130,7 +130,7 @@ function repopulate () {
   createLineChart('revenue-vs-target', colour, width, height, data.revenueVsTarget)
   createLineChart('profit-vs-target', colour, width, height, data.profitVsTarget)
   createLineChart('rph-vs-target', colour, width, height, data.revenuePerHeadVsTarget)
-  createPieChart('revenue-vs-target-pie', '#444444', width, height, data.revenueVsTargetPie)
+  createPieChart('revenue-vs-target-pie', colour, width, height, data.revenueVsTargetPie)
   // createPieChart('#profit-vs-target-pie', width, height, data.profitVsTargetPie)
 
   // Sales
@@ -288,7 +288,7 @@ function addPieStatus (targetId, target, dataSet) {
     .css('color', colour)
 }
 
-function formatGoogle (dates, dataSet) {
+function format (dates, dataSet) {
   let formatted = [ [
       { label: 'Date', type: 'string' }
     , { label: 'Value', type: 'number' }
@@ -304,7 +304,7 @@ function formatGoogle (dates, dataSet) {
   return dataTable
 }
 
-function formatDualGoogle (dates, data) {
+function formatDual (dates, data) {
   let keys = Object.keys(data)
     , formatted = [ ['Date'].concat(keys) ]
 
