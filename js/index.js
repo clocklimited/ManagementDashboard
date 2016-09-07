@@ -1,6 +1,6 @@
-const gpie = require('./createPieChartGoogle')
-    , gchart = require('./createBarGraphGoogle')
-    , gline = require('./createLineGraphGoogle')
+const createPieChart = require('./createPieChartGoogle')
+    , createBarGraph = require('./createBarGraphGoogle')
+    , createLineChart = require('./createLineGraphGoogle')
     , addDetails = require('./addDetails')
     , moment = require('moment')
     , pos = require('../lib/positions.json')
@@ -121,88 +121,88 @@ function repopulate () {
     , colour = '#444444'
 
   // Finance
-  gchart('revenue', colour, width, height, data.revenue)
-  gchart('profit', colour, width, height, data.profit)
-  gchart('costs', colour, width, height, data.costs)
-  gchart('annuity', colour, width, height, data.annuity)
-  gchart('revenue-per-head', colour, width, height, data.revenuePerHead)
+  createBarGraph('revenue', colour, width, height, data.revenue)
+  createBarGraph('profit', colour, width, height, data.profit)
+  createBarGraph('costs', colour, width, height, data.costs)
+  createBarGraph('annuity', colour, width, height, data.annuity)
+  createBarGraph('revenue-per-head', colour, width, height, data.revenuePerHead)
   // createValueBarGraph('#staff-turnover', width, height, data.staffTurnover)
-  gline('revenue-vs-target', colour, width, height, data.revenueVsTarget)
-  gline('profit-vs-target', colour, width, height, data.profitVsTarget)
-  gline('rph-vs-target', colour, width, height, data.revenuePerHeadVsTarget)
-  gpie('revenue-vs-target-pie', '#444444', width, height, data.revenueVsTargetPie)
+  createLineChart('revenue-vs-target', colour, width, height, data.revenueVsTarget)
+  createLineChart('profit-vs-target', colour, width, height, data.profitVsTarget)
+  createLineChart('rph-vs-target', colour, width, height, data.revenuePerHeadVsTarget)
+  createPieChart('revenue-vs-target-pie', '#444444', width, height, data.revenueVsTargetPie)
   // createPieChart('#profit-vs-target-pie', width, height, data.profitVsTargetPie)
 
   // Sales
   colour = '#3A539B'
-  gchart('win-rate', colour, width, height, data.winRate)
-  gchart('closed-deals', colour, width, height, data.closedDeals)
-  gchart('leads', colour, width, height, data.leads)
-  gchart('pipeline', colour, width, height, data.pipeline)
+  createBarGraph('win-rate', colour, width, height, data.winRate)
+  createBarGraph('closed-deals', colour, width, height, data.closedDeals)
+  createBarGraph('leads', colour, width, height, data.leads)
+  createBarGraph('pipeline', colour, width, height, data.pipeline)
 
   // Production
   colour = '#00B16A'
   // createPercentageAreaGraph('#utilisation', width, height, 'data/utilisation.tsv')
   // createValueBarGraph('#active-projects', width, height, 'data/projects.tsv')
-  gchart('tickets', colour, width, height, data.tickets)
+  createBarGraph('tickets', colour, width, height, data.tickets)
 
   // HR Stats
   colour = '#8E44AD'
-  gchart('head-count', colour, width, height, data.headCount)
-  gchart('sick-days', colour, width, height, data.sickDays)
-  gchart('holiday', colour, width, height, data.holiday)
+  createBarGraph('head-count', colour, width, height, data.headCount)
+  createBarGraph('sick-days', colour, width, height, data.sickDays)
+  createBarGraph('holiday', colour, width, height, data.holiday)
   addDetails('#staff-satisfaction', width, height / 2, data.staffSatisfaction)
   addDetails('#client-satisfaction', width, height / 2, data.clientSatisfaction)
 }
 
 function calculateStatus () {
   // Revenue
-  addStatusGoogle('#revenue-status', data.revenue, 'last month')
+  addStatus('#revenue-status', data.revenue, 'last month')
 
   // Profit
-  addStatusGoogle('#profit-status', data.profit, 'last month')
+  addStatus('#profit-status', data.profit, 'last month')
 
   // Annuity
-  addStatusGoogle('#annuity-status', data.annuity, 'last month')
+  addStatus('#annuity-status', data.annuity, 'last month')
 
   // Revenue Per Head
-  addStatusGoogle('#revenue-per-head-status', data.revenuePerHead, 'last month')
+  addStatus('#revenue-per-head-status', data.revenuePerHead, 'last month')
 
   // Staff Turnover
   // addStatus('#staff-turnover-status', data.staffTurnover, 'last month')
 
   // Revenue vs Target
-  addStatusGoogle('#revenue-vs-target-status', data.revenueVsTarget, 'target')
+  addStatus('#revenue-vs-target-status', data.revenueVsTarget, 'target')
 
   // Profit vs Target
-  addStatusGoogle('#profit-vs-target-status', data.profitVsTarget, 'target')
+  addStatus('#profit-vs-target-status', data.profitVsTarget, 'target')
 
   // RPH vs Target
-  addStatusGoogle('#rph-vs-target-status', data.revenuePerHeadVsTarget, 'target')
+  addStatus('#rph-vs-target-status', data.revenuePerHeadVsTarget, 'target')
 
   // Revenue vs Target - Pie
   addPieStatus('#revenue-vs-target-pie-status', data.target.revenue, data.revenueVsTargetPie)
 
   // Closed Deals
-  addStatusGoogle('#closed-deals-status', data.closedDeals, 'last month')
+  addStatus('#closed-deals-status', data.closedDeals, 'last month')
 
   // Leads
-  addStatusGoogle('#leads-status', data.leads, 'last month')
+  addStatus('#leads-status', data.leads, 'last month')
 
   // Win Rate
   addStatus('#win-rate-status', data.winRate, 'last month')
 
   // Pipeline
-  addStatusGoogle('#pipeline-status', data.pipeline, 'last month')
+  addStatus('#pipeline-status', data.pipeline, 'last month')
 
   // Staff Satisfaction
-  addStatus('#staff-satisfaction-status', [ data.staffSatisfaction ])
+  addStatusOld('#staff-satisfaction-status', [ data.staffSatisfaction ])
 
   // Client Satisfaction
-  addStatus('#client-satisfaction-status', [ data.clientSatisfaction ])
+  addStatusOld('#client-satisfaction-status', [ data.clientSatisfaction ])
 }
 
-function addStatus (targetId, data) {
+function addStatusOld (targetId, data) {
   let length = data.length
     , currentMonthData
     , value
@@ -232,7 +232,7 @@ function addStatus (targetId, data) {
     .css('color', colour)
 }
 
-function addStatusGoogle (targetId, dataSet, vs) {
+function addStatus (targetId, dataSet, vs) {
   let length = dataSet.getNumberOfRows()
     , current
     , value
