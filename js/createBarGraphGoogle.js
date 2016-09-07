@@ -15,7 +15,8 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
       , height: '75%'
     }
     , legend: {
-        position: data.getNumberOfColumns > 2 ? 'top' : 'none'
+        position: data.getNumberOfColumns() > 2 ? 'top' : 'none'
+      , alignment: 'end'
     }
   }
 
