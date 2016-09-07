@@ -9,11 +9,10 @@ html
   body
     h1 Clock Management Dashboard
     #buttons.row
-      button.flat-button(id='valueToggle') Toggle Values
-      button.flat-button(id='legendToggle') Toggle Legends
-      button.flat-button(id='interactivityToggle') Toggle Zoom
+      button.flat-button.js-value-toggle Toggle Values
+      button.flat-button.js-zoom-toggle Toggle Zoom
       span#date 
-        input(id='monthPicker', style='width: 0px;')
+        input.js-month-picker(style='width: 0px;')
       button.flat-button(id='selectButton') Select Graphs
 
     h2.finance Finance
@@ -166,17 +165,13 @@ html
       })
     }
 
-    $('#valueToggle').on('click', function () {
+    $('.js-value-toggle').on('click', function () {
       $('.valueText').each((i, e) => $(e).toggle())
     })
 
-    $('#legendToggle').on('click', function () {
-      $('.legend').each((i, e) => $(e).toggle())
-    })
 
-    $('#interactivityToggle').on('click', function () {
+    $('.js-zoom-toggle').on('click', function () {
       events = $._data($('.graph')[0], "events")
-      console.dir(events)
       if (events && events.click) {
         $('.graph').off('click')
       } else {
@@ -193,7 +188,7 @@ html
       }
     })
 
-    $('#monthPicker').MonthPicker({
+    $('.js-month-picker').MonthPicker({
       Button: "<button id='dateToggle' class='flat-button'>Select Date</button>"
     , MonthFormat: 'MM yy'
     , OnAfterMenuClose: function() {

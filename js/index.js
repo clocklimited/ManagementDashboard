@@ -49,7 +49,7 @@ let spreadSheetData = [ ]
 function getSpreadsheetData () {
   return $.ajax({
     url: '/data'
-  , success: function (body) {
+  , success: (body) => {
       console.log('Data', body.values)
       spreadSheetData = body.values
       let currentMonth = validate(getUrlParameter('month'), moment().format('MMMM YYYY'))
@@ -96,7 +96,7 @@ function getSpreadsheetData () {
 function getSpreadsheetTargets () {
   return $.ajax({
     url: '/targets'
-  , success: function (body) {
+  , success: (body) => {
       console.log('Target', body.values)
       spreadSheetTargets = body.values
       data.target.revenue = spreadSheetTargets[pos.TARGETS.REVENUE][1]
@@ -300,31 +300,20 @@ function format (dates, dataSet) {
     }
     formatted.push([ dates[index], +validate(item, 0) ])
   })
-  var dataTable = google.visualization.arrayToDataTable(formatted)
-  return dataTable
+
+  return google.visualization.arrayToDataTable(formatted)
 }
 
 function formatDual (dates, data) {
   let keys = Object.keys(data)
     , formatted = [ ['Date'].concat(keys) ]
 
-  console.log(data)
-  // data[keys[0]].forEach((item, index) => {
-  //   formatted.push([ dates[index], +item, +validate(data[keys[1]][index], 0) ])
-  // })
-
   dates.forEach((item, index) => {
     formatted.push([ item, +validate(data[keys[0]][index], 0), +validate(data[keys[1]][index], 0) ])
   })
   console.log(formatted)
-  /*
-  [ { date: 'Sep 16'
-    , opened: 3
-    , closed: 4
-  } ]
-  */
-  var dataTable = google.visualization.arrayToDataTable(formatted)
-  return dataTable
+
+  return google.visualization.arrayToDataTable(formatted)
 }
 
 function formatItemVsTarget (dates, target, data, notCumulative) {
@@ -340,7 +329,7 @@ function formatItemVsTarget (dates, target, data, notCumulative) {
   } else {
     oneMonthTarget /= 12
   }
-  dates.forEach(function (item, index) {
+  dates.forEach((item, index) => {
     runningTarget += oneMonthTarget
     runningRevenueTotal += data.getValue(index, 1)
     formatted.push([
@@ -349,27 +338,14 @@ function formatItemVsTarget (dates, target, data, notCumulative) {
       , runningRevenueTotal
     ])
   })
-
-  /*
-  [ { date: date
-    , target: target
-    , revenue: revenue
-  } ]
-  */
-  var dataTable = google.visualization.arrayToDataTable(formatted)
-  return dataTable
+  return google.visualization.arrayToDataTable(formatted)
 }
 
 function formatPieChart (dates, target, dataSet) {
-  // Get cumulative total of data
-  // Do target - total
-  // Format data like:
-  // [ { label: 'Target', value: 20 }
-  //  ,{ label: 'Value',  value: 40 } ]
   var revenueTarget = validate(+target.replace(/£|,/g, ''), 0)
     , runningTotal = 0
     console.log(dataSet)
-  dates.forEach(function (item, index) {
+  dates.forEach((item, index) => {
     runningTotal += dataSet.getValue(index, 1)
   })
 
