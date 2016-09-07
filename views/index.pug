@@ -11,7 +11,7 @@ html
     #buttons.row
       button.flat-button(id='valueToggle') Toggle Values
       button.flat-button(id='legendToggle') Toggle Legends
-      button.flat-button(id='interactivityToggle') Toggle Interactivity
+      button.flat-button(id='interactivityToggle') Toggle Zoom
       span#date 
         input(id='monthPicker', style='width: 0px;')
       button.flat-button(id='selectButton') Select Graphs
@@ -61,47 +61,59 @@ html
     
     h2.sales-section Sales
     #sales-section.row
-      #win-rate.graph
+      .group
         h3 Win Rate 
           span#win-rate-status.status
-      #closed-deals.graph
+        #win-rate.graph
+      .group
         h3 Closed Deals 
           span#closed-deals-status.status
-      #leads.graph
+        #closed-deals.graph
+      .group
         h3 Leads 
           span#leads-status.status
-      #pipeline.graph
+        #leads.graph
+      .group
         h3 Pipeline 
           span#pipeline-status.status
+        #pipeline.graph
+       
 
     h2.production Production
     #production.row
-      #tickets.graph
+      .group
         h3 Tickets
+        #tickets.graph
 
     h2.human-resources HR
     #human-resources.half.row
-      #head-count.graph
+      .group
         h3  Head Count
-      #holiday.graph
+        #head-count.graph
+      .group
         h3  Holiday
-      #sick-days.graph
+        #holiday.graph
+      .group
         h3  Sick Days
+        #sick-days.graph
+
       #satisfaction-group
-        #staff-satisfaction.graph
+        .group
           h3  Staff Satisfaction
             span#staff-satisfaction-status.status
-          h4 Target
-            span#staff-satisfaction-target
-          h4 Current
-            span#staff-satisfaction-value
-        #client-satisfaction.graph
+          #staff-satisfaction.graph
+            h4 Target
+              span#staff-satisfaction-target
+            h4 Current
+              span#staff-satisfaction-value
+        .group
           h3  Client Satisfaction
             span#client-satisfaction-status.status
-          h4 Target
-            span#client-satisfaction-target
-          h4 Current
-            span#client-satisfaction-value
+          #client-satisfaction.graph
+            h4 Target
+              span#client-satisfaction-target
+            h4 Current
+              span#client-satisfaction-value
 
     .modal#selectModal
       .modal-content

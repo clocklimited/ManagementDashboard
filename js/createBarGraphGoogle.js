@@ -3,7 +3,7 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
       width: w
     , height: h
     , backgroundColor: colour
-    , colors: [ 'white' ]
+    , colors: [ 'white', 'black' ]
     , vAxis: {
         format: 'short'
     }
@@ -15,7 +15,7 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
       , height: '75%'
     }
     , legend: {
-        position: 'none'
+        position: data.getNumberOfColumns > 2 ? 'top' : 'none'
     }
   }
 

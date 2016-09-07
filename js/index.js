@@ -70,23 +70,23 @@ function getSpreadsheetData () {
       data.profit = formatGoogle(data.dates, spreadSheetData[pos.PROFIT].slice(start, end))
       data.costs.staff = spreadSheetData[pos.COSTS_STAFF].slice(start, end)
       data.costs.total = spreadSheetData[pos.COSTS_TOTAL].slice(start, end)
-      data.costs = formatDual(data.dates, data.costs)
+      data.costs = formatDualGoogle(data.dates, data.costs)
       data.annuity = formatGoogle(data.dates, spreadSheetData[pos.ANNUITY].slice(start, end))
       data.revenuePerHead = formatGoogle(data.dates, spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
       // data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
       // SALES
       data.winRate = format(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
-      data.closedDeals = format(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
-      data.leads = format(data.dates, spreadSheetData[pos.LEADS].slice(start, end))
-      data.pipeline = format(data.dates, spreadSheetData[pos.PIPELINE].slice(start, end))
+      data.closedDeals = formatGoogle(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
+      data.leads = formatGoogle(data.dates, spreadSheetData[pos.LEADS].slice(start, end))
+      data.pipeline = formatGoogle(data.dates, spreadSheetData[pos.PIPELINE].slice(start, end))
       // PRODUCTION
       data.tickets.opened = spreadSheetData[pos.TICKETS_OPENED].slice(start, end)
       data.tickets.closed = spreadSheetData[pos.TICKETS_CLOSED].slice(start, end)
-      data.tickets = formatDual(data.dates, data.tickets)
+      data.tickets = formatDualGoogle(data.dates, data.tickets)
       // HR
-      data.headCount = format(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
-      data.sickDays = format(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
-      data.holiday = format(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
+      data.headCount = formatGoogle(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
+      data.sickDays = formatGoogle(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
+      data.holiday = formatGoogle(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
       data.staffSatisfaction.value = spreadSheetData[pos.STAFF_SATISFACTION][end - 1]
       data.clientSatisfaction.value = spreadSheetData[pos.CLIENT_SATISFACTION][end - 1]
 
@@ -127,7 +127,7 @@ function repopulate () {
   // Finance
   gchart('revenue', colour, width, height, data.revenue)
   gchart('profit', colour, width, height, data.profit)
-  createValueBarGraph('#costs', width, height, data.costs)
+  gchart('costs', colour, width, height, data.costs)
   gchart('annuity', colour, width, height, data.annuity)
   gchart('revenue-per-head', colour, width, height, data.revenuePerHead)
   // createValueBarGraph('#staff-turnover', width, height, data.staffTurnover)
@@ -138,20 +138,23 @@ function repopulate () {
   // createPieChart('#profit-vs-target-pie', width, height, data.profitVsTargetPie)
 
   // Sales
+  colour = '#3A539B'
   createPercentageAreaGraph('#win-rate', width, height, data.winRate)
-  createValueBarGraph('#closed-deals', width, height, data.closedDeals)
-  createValueBarGraph('#leads', width, height, data.leads)
-  createValueBarGraph('#pipeline', width, height, data.pipeline)
+  gchart('closed-deals', colour, width, height, data.closedDeals)
+  gchart('leads', colour, width, height, data.leads)
+  gchart('pipeline', colour, width, height, data.pipeline)
 
   // Production
+  colour = '#00B16A'
   // createPercentageAreaGraph('#utilisation', width, height, 'data/utilisation.tsv')
   // createValueBarGraph('#active-projects', width, height, 'data/projects.tsv')
-  createValueBarGraph('#tickets', width, height, data.tickets)
+  gchart('tickets', colour, width, height, data.tickets)
 
   // HR Stats
-  createValueBarGraph('#head-count', width, height, data.headCount)
-  createValueBarGraph('#sick-days', width, height, data.sickDays)
-  createValueBarGraph('#holiday', width, height, data.holiday)
+  colour = '#8E44AD'
+  gchart('head-count', colour, width, height, data.headCount)
+  gchart('sick-days', colour, width, height, data.sickDays)
+  gchart('holiday', colour, width, height, data.holiday)
   addDetails('#staff-satisfaction', width, height / 2, data.staffSatisfaction)
   addDetails('#client-satisfaction', width, height / 2, data.clientSatisfaction)
 }
@@ -185,16 +188,16 @@ function calculateStatus () {
   addPieStatus('#revenue-vs-target-pie-status', data.target.revenue, data.revenueVsTargetPie)
 
   // Closed Deals
-  addStatus('#closed-deals-status', data.closedDeals, 'last month')
+  addStatusGoogle('#closed-deals-status', data.closedDeals, 'last month')
 
   // Leads
-  addStatus('#leads-status', data.leads, 'last month')
+  addStatusGoogle('#leads-status', data.leads, 'last month')
 
   // Win Rate
   addStatus('#win-rate-status', data.winRate, 'last month')
 
   // Pipeline
-  addStatus('#pipeline-status', data.pipeline, 'last month')
+  addStatusGoogle('#pipeline-status', data.pipeline, 'last month')
 
   // Staff Satisfaction
   addStatus('#staff-satisfaction-status', [ data.staffSatisfaction ], 'target')
@@ -252,6 +255,10 @@ function addStatusGoogle (targetId, dataSet, vs) {
     , arrow = '&#8212;' // Dash
     , colour = 'black'
 
+  if (length === 0) {
+    return
+  }
+
   if (vs === 'target') {
     value = dataSet.getValue(length - 1, 2)
     target = dataSet.getValue(length - 1, 1)
@@ -276,7 +283,7 @@ function addStatusGoogle (targetId, dataSet, vs) {
     colour = 'rgb(210, 8, 8)'
   }
   $(targetId)
-    .html(arrow + ' ' + (Math.abs(difference) > 99 ? difference.toFixed(1) : difference.toFixed(2)) + '%')
+    .html(arrow + ' ' + difference.toFixed(1) + '%')
     .css('color', colour)
 }
 
@@ -325,56 +332,27 @@ function formatGoogle (dates, dataSet) {
   return dataTable
 }
 
-function formatDual (dates, data) {
-  let formatted = [ ]
-    , keys = Object.keys(data)
+function formatDualGoogle (dates, data) {
+  let keys = Object.keys(data)
+    , formatted = [ ['Date'].concat(keys) ]
 
-  data[keys[0]].forEach((item, index) => {
-    let obj = { }
-    obj.date = dates[index]
-    obj[keys[0]] = +item
-    obj[keys[1]] = validate(+data[keys[1]][index], 0)
-    formatted.push(obj)
+  console.log(data)
+  // data[keys[0]].forEach((item, index) => {
+  //   formatted.push([ dates[index], +item, +validate(data[keys[1]][index], 0) ])
+  // })
+
+  dates.forEach((item, index) => {
+    formatted.push([ item, +validate(data[keys[0]][index], 0), +validate(data[keys[1]][index], 0) ])
   })
+  console.log(formatted)
   /*
   [ { date: 'Sep 16'
     , opened: 3
     , closed: 4
   } ]
   */
-  return formatted
-}
-
-function formatItemVsTarget (dates, target, data, notCumulative) {
-  // Strip £ , and turn into monthly target
-  let oneMonthTarget = validate(+target.replace(/£|,/g, ''), 0)
-    , runningTarget = 0
-    , runningRevenueTotal = 0
-    , formatted = [ ]
-
-  if (notCumulative) {
-    runningTarget = oneMonthTarget
-    oneMonthTarget = 0
-  } else {
-    oneMonthTarget /= 12
-  }
-  dates.forEach(function (item, index) {
-    runningTarget += oneMonthTarget
-    runningRevenueTotal += +validate(data[index], { value: 0 }).value
-    formatted.push({
-        date: item
-      , target: runningTarget
-      , value: runningRevenueTotal
-    })
-  })
-
-  /*
-  [ { date: date
-    , target: target
-    , revenue: revenue
-  } ]
-  */
-  return formatted
+  var dataTable = google.visualization.arrayToDataTable(formatted)
+  return dataTable
 }
 
 function formatItemVsTargetGoogle (dates, target, data, notCumulative) {
