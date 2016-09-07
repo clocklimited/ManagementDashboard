@@ -104,9 +104,9 @@ function getSpreadsheetTargets () {
       data.target.revenuePerHead = spreadSheetTargets[pos.TARGETS.REVENUE_PER_HEAD][1]
       data.staffSatisfaction.target = spreadSheetTargets[pos.TARGETS.STAFF_SATISFACTION][1]
       data.clientSatisfaction.target = spreadSheetTargets[pos.TARGETS.CLIENT_SATISFACTION][1]
-      data.revenueVsTarget = formatItemVsTargetGoogle(data.dates, data.target.revenue, data.revenue)
-      data.profitVsTarget = formatItemVsTargetGoogle(data.dates, data.target.profit, data.profit)
-      data.revenuePerHeadVsTarget = formatItemVsTargetGoogle(data.dates, data.target.revenuePerHead, data.revenuePerHead, true)
+      data.revenueVsTarget = formatItemVsTarget(data.dates, data.target.revenue, data.revenue)
+      data.profitVsTarget = formatItemVsTarget(data.dates, data.target.profit, data.profit)
+      data.revenuePerHeadVsTarget = formatItemVsTarget(data.dates, data.target.revenuePerHead, data.revenuePerHead, true)
       data.revenueVsTargetPie = formatPieChart(data.dates, data.target.revenue, data.revenue)
       data.profitVsTargetPie = formatPieChart(data.dates, data.target.profit, data.profit)
       repopulate()
@@ -327,7 +327,7 @@ function formatDual (dates, data) {
   return dataTable
 }
 
-function formatItemVsTargetGoogle (dates, target, data, notCumulative) {
+function formatItemVsTarget (dates, target, data, notCumulative) {
   // Strip £ , and turn into monthly target
   let oneMonthTarget = validate(+target.replace(/£|,/g, ''), 0)
     , runningTarget = 0
