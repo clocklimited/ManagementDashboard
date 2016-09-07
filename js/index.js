@@ -1,8 +1,4 @@
-const createValueBarGraph = require('./createValueBarGraph')
-    , createPercentageAreaGraph = require('./createPercentageAreaGraph')
-    , createTargetLineGraph = require('./createTargetLineGraph')
-    , createPieChart = require('./createPieChart')
-    , gpie = require('./createPieChartGoogle')
+const gpie = require('./createPieChartGoogle')
     , gchart = require('./createBarGraphGoogle')
     , gline = require('./createLineGraphGoogle')
     , addDetails = require('./addDetails')
@@ -75,7 +71,7 @@ function getSpreadsheetData () {
       data.revenuePerHead = formatGoogle(data.dates, spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
       // data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
       // SALES
-      data.winRate = format(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
+      data.winRate = formatGoogle(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
       data.closedDeals = formatGoogle(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
       data.leads = formatGoogle(data.dates, spreadSheetData[pos.LEADS].slice(start, end))
       data.pipeline = formatGoogle(data.dates, spreadSheetData[pos.PIPELINE].slice(start, end))
@@ -139,7 +135,7 @@ function repopulate () {
 
   // Sales
   colour = '#3A539B'
-  createPercentageAreaGraph('#win-rate', width, height, data.winRate)
+  gchart('win-rate', colour, width, height, data.winRate)
   gchart('closed-deals', colour, width, height, data.closedDeals)
   gchart('leads', colour, width, height, data.leads)
   gchart('pipeline', colour, width, height, data.pipeline)
@@ -200,35 +196,26 @@ function calculateStatus () {
   addStatusGoogle('#pipeline-status', data.pipeline, 'last month')
 
   // Staff Satisfaction
-  addStatus('#staff-satisfaction-status', [ data.staffSatisfaction ], 'target')
+  addStatus('#staff-satisfaction-status', [ data.staffSatisfaction ])
 
   // Client Satisfaction
-  addStatus('#client-satisfaction-status', [ data.clientSatisfaction ], 'target')
+  addStatus('#client-satisfaction-status', [ data.clientSatisfaction ])
 }
 
-function addStatus (targetId, data, vs) {
+function addStatus (targetId, data) {
   let length = data.length
-    , current
     , currentMonthData
     , value
     , target
-    , previous
     , difference
     , arrow = '&#8212;' // Dash
     , colour = 'black'
     , fallbackValue = { value: 1, target: 1 }
 
-  if (vs === 'target') {
-    currentMonthData = validate(data[length - 1], fallbackValue)
-    value = currentMonthData.value
-    target = currentMonthData.target
-    difference = (value / target) * 100 - 100
-  } else {
-    console.log(data)
-    current = validate(data[length - 1], fallbackValue)
-    previous = validate(data[length - 2], fallbackValue)
-    difference = ((current.value - previous.value) / Math.abs(previous.value)) * 100
-  }
+  currentMonthData = validate(data[length - 1], fallbackValue)
+  value = currentMonthData.value
+  target = currentMonthData.target
+  difference = (value / target) * 100 - 100
 
   if (difference === 0) {
     arrow = '&#8212;' // Dash
@@ -299,21 +286,6 @@ function addPieStatus (targetId, target, dataSet) {
   $(targetId)
     .html(arrow + ' ' + difference.toFixed(2) + '%')
     .css('color', colour)
-}
-
-function format (dates, data) {
-  let formatted = [ ]
-
-  data.forEach((item, index) => {
-    if (typeof item === 'string') {
-      item = item.replace(/£|,/g, '')
-    }
-    formatted.push({
-      date: dates[index]
-    , value: validate(item, '0')
-    })
-  })
-  return formatted
 }
 
 function formatGoogle (dates, dataSet) {
