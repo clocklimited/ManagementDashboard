@@ -4,6 +4,7 @@ const createPieChart = require('./createPieChartGoogle')
     , addDetails = require('./addDetails')
     , moment = require('moment')
     , pos = require('../lib/positions.json')
+    , createFormatter = require('./formatter')
 
 let spreadSheetData = [ ]
   , data = {
@@ -45,6 +46,7 @@ let spreadSheetData = [ ]
     }
   }
   , spreadSheetTargets = [ ]
+  , formatter
 
 function getSpreadsheetData () {
   return $.ajax({
@@ -61,28 +63,29 @@ function getSpreadsheetData () {
 
       data.dates = spreadSheetData[pos.MONTH].slice(start, end)
       data.dates = data.dates.map((date) => moment(date, 'MMMM YYYY').format('MMM YY'))
+      formatter = createFormatter(data.dates)
       // FINANCE
-      data.revenue = format(data.dates, spreadSheetData[pos.REVENUE].slice(start, end))
-      data.profit = format(data.dates, spreadSheetData[pos.PROFIT].slice(start, end))
+      data.revenue = formatter.format(spreadSheetData[pos.REVENUE].slice(start, end))
+      data.profit = formatter.format(spreadSheetData[pos.PROFIT].slice(start, end))
       data.costs.Staff = spreadSheetData[pos.COSTS_STAFF].slice(start, end)
       data.costs.Total = spreadSheetData[pos.COSTS_TOTAL].slice(start, end)
-      data.costs = formatDual(data.dates, data.costs)
-      data.annuity = format(data.dates, spreadSheetData[pos.ANNUITY].slice(start, end))
-      data.revenuePerHead = format(data.dates, spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
+      data.costs = formatter.formatDual(data.costs)
+      data.annuity = formatter.format(spreadSheetData[pos.ANNUITY].slice(start, end))
+      data.revenuePerHead = formatter.format(spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
       // data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
       // SALES
-      data.winRate = format(data.dates, spreadSheetData[pos.WIN_RATE].slice(start, end))
-      data.closedDeals = format(data.dates, spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
-      data.leads = format(data.dates, spreadSheetData[pos.LEADS].slice(start, end))
-      data.pipeline = format(data.dates, spreadSheetData[pos.PIPELINE].slice(start, end))
+      data.winRate = formatter.format(spreadSheetData[pos.WIN_RATE].slice(start, end))
+      data.closedDeals = formatter.format(spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
+      data.leads = formatter.format(spreadSheetData[pos.LEADS].slice(start, end))
+      data.pipeline = formatter.format(spreadSheetData[pos.PIPELINE].slice(start, end))
       // PRODUCTION
       data.tickets.Opened = spreadSheetData[pos.TICKETS_OPENED].slice(start, end)
       data.tickets.Closed = spreadSheetData[pos.TICKETS_CLOSED].slice(start, end)
-      data.tickets = formatDual(data.dates, data.tickets)
+      data.tickets = formatter.formatDual(data.tickets)
       // HR
-      data.headCount = format(data.dates, spreadSheetData[pos.HEAD_COUNT].slice(start, end))
-      data.sickDays = format(data.dates, spreadSheetData[pos.SICK_DAYS].slice(start, end))
-      data.holiday = format(data.dates, spreadSheetData[pos.HOLIDAY].slice(start, end))
+      data.headCount = formatter.format(spreadSheetData[pos.HEAD_COUNT].slice(start, end))
+      data.sickDays = formatter.format(spreadSheetData[pos.SICK_DAYS].slice(start, end))
+      data.holiday = formatter.format(spreadSheetData[pos.HOLIDAY].slice(start, end))
       data.staffSatisfaction.value = spreadSheetData[pos.STAFF_SATISFACTION][end - 1]
       data.clientSatisfaction.value = spreadSheetData[pos.CLIENT_SATISFACTION][end - 1]
 
@@ -104,13 +107,12 @@ function getSpreadsheetTargets () {
       data.target.revenuePerHead = spreadSheetTargets[pos.TARGETS.REVENUE_PER_HEAD][1]
       data.staffSatisfaction.target = spreadSheetTargets[pos.TARGETS.STAFF_SATISFACTION][1]
       data.clientSatisfaction.target = spreadSheetTargets[pos.TARGETS.CLIENT_SATISFACTION][1]
-      data.revenueVsTarget = formatItemVsTarget(data.dates, data.target.revenue, data.revenue)
-      data.profitVsTarget = formatItemVsTarget(data.dates, data.target.profit, data.profit)
-      data.revenuePerHeadVsTarget = formatItemVsTarget(data.dates, data.target.revenuePerHead, data.revenuePerHead, true)
-      data.revenueVsTargetPie = formatPieChart(data.dates, data.target.revenue, data.revenue)
-      data.profitVsTargetPie = formatPieChart(data.dates, data.target.profit, data.profit)
+      data.revenueVsTarget = formatter.formatItemVsTarget(data.target.revenue, data.revenue)
+      data.profitVsTarget = formatter.formatItemVsTarget(data.target.profit, data.profit)
+      data.revenuePerHeadVsTarget = formatter.formatItemVsTarget(data.target.revenuePerHead, data.revenuePerHead, true)
+      data.revenueVsTargetPie = formatter.formatPieChart(data.target.revenue, data.revenue)
+      data.profitVsTargetPie = formatter.formatPieChart(data.target.profit, data.profit)
       repopulate()
-      // calculateStatus()
     }
   })
 }
