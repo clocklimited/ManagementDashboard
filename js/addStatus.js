@@ -27,7 +27,7 @@ function addStatus (targetId, dataSet) {
     , arrow = '&#8212;' // Dash
     , colour = 'black'
 
-  if (length === 0) {
+  if (dataSet.getFilteredRows([{ column: 1, minValue: 1 }]).length === 0) {
     return
   }
 
