@@ -19,12 +19,13 @@ module.exports = function (dates) {
     return google.visualization.arrayToDataTable(formatted)
   }
 
-  function formatItemVsTarget (target, data, notCumulative) {
+  function formatItemVsTarget (data, notCumulative) {
     // Strip £ , and turn into monthly target
-    let oneMonthTarget = validate(+target.replace(/£|,/g, ''), 0)
+    let oneMonthTarget = validate(+data.Target.replace(/£|,/g, ''), 0)
       , runningTarget = 0
       , runningRevenueTotal = 0
-      , formatted = [ [ 'Date', 'Target', 'Value' ] ]
+      , keys = Object.keys(data)
+      , formatted = [ [ 'Date' ].concat(keys) ]
 
     if (notCumulative) {
       runningTarget = oneMonthTarget
@@ -35,7 +36,7 @@ module.exports = function (dates) {
     }
     dates.forEach((date, index) => {
       runningTarget += oneMonthTarget
-      runningRevenueTotal += data.getValue(index, 1)
+      runningRevenueTotal += data[keys[1]].getValue(index, 1)
       formatted.push([
           date
         , { v: runningTarget, f: formatCurrency(runningTarget) }

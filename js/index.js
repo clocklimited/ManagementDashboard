@@ -107,9 +107,9 @@ function getSpreadsheetTargets () {
       data.target.revenuePerHead = spreadSheetTargets[pos.TARGETS.REVENUE_PER_HEAD][1]
       data.staffSatisfaction.target = spreadSheetTargets[pos.TARGETS.STAFF_SATISFACTION][1]
       data.clientSatisfaction.target = spreadSheetTargets[pos.TARGETS.CLIENT_SATISFACTION][1]
-      data.revenueVsTarget = formatter.formatItemVsTarget(data.target.revenue, data.revenue)
-      data.profitVsTarget = formatter.formatItemVsTarget(data.target.profit, data.profit)
-      data.revenuePerHeadVsTarget = formatter.formatItemVsTarget(data.target.revenuePerHead, data.revenuePerHead, true)
+      data.revenueVsTarget = formatter.formatItemVsTarget({ Target: data.target.revenue, Revenue: data.revenue })
+      data.profitVsTarget = formatter.formatItemVsTarget({ Target: data.target.profit, Profit: data.profit })
+      data.revenuePerHeadVsTarget = formatter.formatItemVsTarget({ Target: data.target.revenuePerHead, RPH: data.revenuePerHead }, true)
       data.revenueVsTargetPie = formatter.formatPieChart(data.target.revenue, data.revenue)
       data.profitVsTargetPie = formatter.formatPieChart(data.target.profit, data.profit)
       repopulate()
