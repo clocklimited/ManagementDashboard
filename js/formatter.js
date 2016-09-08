@@ -1,27 +1,19 @@
 module.exports = function (dates) {
   function format (dataSet) {
-    let formatted = [ [
-        'Date'
-      , 'Value'
-    ] ]
-
-    dates.forEach((date, index) => {
-      if (typeof dataSet[index] === 'string') {
-        dataSet[index] = dataSet[index].replace(/£|,/g, '')
-      }
-
-      formatted.push([ date, +validate(dataSet[index], 0) ])
-    })
-
-    return google.visualization.arrayToDataTable(formatted)
-  }
-
-  function formatDual (data) {
-    let keys = Object.keys(data)
+    let keys = Object.keys(dataSet)
       , formatted = [ ['Date'].concat(keys) ]
 
     dates.forEach((date, index) => {
-      formatted.push([ date, +validate(data[keys[0]][index], 0), +validate(data[keys[1]][index], 0) ])
+      var row = [ date ]
+      keys.forEach((key) => {
+        if (typeof dataSet[key][index] === 'string') {
+          var item = dataSet[key][index].replace(/£|,/g, '')
+        }
+        // v: Numerical value, f: Formatted value
+        // Eg: v: 20000, f: £20,000
+        row.push({ v: +validate(item, 0), f: dataSet[key][index] })
+      })
+      formatted.push(row)
     })
 
     return google.visualization.arrayToDataTable(formatted)
@@ -70,7 +62,6 @@ module.exports = function (dates) {
 
   return {
       format: format
-    , formatDual: formatDual
     , formatItemVsTarget: formatItemVsTarget
     , formatPieChart: formatPieChart
   }

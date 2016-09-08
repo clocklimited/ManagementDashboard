@@ -65,27 +65,27 @@ function getSpreadsheetData () {
       data.dates = data.dates.map((date) => moment(date, 'MMMM YYYY').format('MMM YY'))
       formatter = createFormatter(data.dates)
       // FINANCE
-      data.revenue = formatter.format(spreadSheetData[pos.REVENUE].slice(start, end))
-      data.profit = formatter.format(spreadSheetData[pos.PROFIT].slice(start, end))
+      data.revenue = formatter.format({ Revenue: spreadSheetData[pos.REVENUE].slice(start, end) })
+      data.profit = formatter.format({ Profit: spreadSheetData[pos.PROFIT].slice(start, end) })
       data.costs.Staff = spreadSheetData[pos.COSTS_STAFF].slice(start, end)
       data.costs.Total = spreadSheetData[pos.COSTS_TOTAL].slice(start, end)
-      data.costs = formatter.formatDual(data.costs)
-      data.annuity = formatter.format(spreadSheetData[pos.ANNUITY].slice(start, end))
-      data.revenuePerHead = formatter.format(spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end))
+      data.costs = formatter.format(data.costs)
+      data.annuity = formatter.format({ Annuity: spreadSheetData[pos.ANNUITY].slice(start, end) })
+      data.revenuePerHead = formatter.format({ RPH: spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end) })
       // data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
       // SALES
-      data.winRate = formatter.format(spreadSheetData[pos.WIN_RATE].slice(start, end))
-      data.closedDeals = formatter.format(spreadSheetData[pos.CLOSED_DEALS].slice(start, end))
-      data.leads = formatter.format(spreadSheetData[pos.LEADS].slice(start, end))
-      data.pipeline = formatter.format(spreadSheetData[pos.PIPELINE].slice(start, end))
+      data.winRate = formatter.format({ WinRate: spreadSheetData[pos.WIN_RATE].slice(start, end) })
+      data.closedDeals = formatter.format({ ClosedDeals: spreadSheetData[pos.CLOSED_DEALS].slice(start, end) })
+      data.leads = formatter.format({ Leads: spreadSheetData[pos.LEADS].slice(start, end) })
+      data.pipeline = formatter.format({ Pipeline: spreadSheetData[pos.PIPELINE].slice(start, end) })
       // PRODUCTION
       data.tickets.Opened = spreadSheetData[pos.TICKETS_OPENED].slice(start, end)
       data.tickets.Closed = spreadSheetData[pos.TICKETS_CLOSED].slice(start, end)
-      data.tickets = formatter.formatDual(data.tickets)
+      data.tickets = formatter.format(data.tickets)
       // HR
-      data.headCount = formatter.format(spreadSheetData[pos.HEAD_COUNT].slice(start, end))
-      data.sickDays = formatter.format(spreadSheetData[pos.SICK_DAYS].slice(start, end))
-      data.holiday = formatter.format(spreadSheetData[pos.HOLIDAY].slice(start, end))
+      data.headCount = formatter.format({ HeadCount: spreadSheetData[pos.HEAD_COUNT].slice(start, end) })
+      data.sickDays = formatter.format({ SickDays: spreadSheetData[pos.SICK_DAYS].slice(start, end) })
+      data.holiday = formatter.format({ Holiday: spreadSheetData[pos.HOLIDAY].slice(start, end) })
       data.staffSatisfaction.value = spreadSheetData[pos.STAFF_SATISFACTION][end - 1]
       data.clientSatisfaction.value = spreadSheetData[pos.CLIENT_SATISFACTION][end - 1]
 
