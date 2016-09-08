@@ -7,8 +7,7 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
     , backgroundColor: colour
     , colors: [ 'white', 'black' ]
     , vAxis: {
-        format: 'short'
-      , minValue: 0
+      format: 'short'
     }
     , fontSize: 12
     , chartArea: {
