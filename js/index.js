@@ -111,7 +111,6 @@ function getSpreadsheetTargets () {
       data.profitVsTarget = formatter.formatItemVsTarget({ Target: data.target.profit, Profit: data.profit })
       data.revenuePerHeadVsTarget = formatter.formatItemVsTarget({ Target: data.target.revenuePerHead, RPH: data.revenuePerHead }, true)
       data.revenueVsTargetPie = formatter.formatPieChart(data.target.revenue, data.revenue)
-      data.profitVsTargetPie = formatter.formatPieChart(data.target.profit, data.profit)
       repopulate()
     }
   })
@@ -133,7 +132,6 @@ function repopulate () {
   createLineChart('profit-vs-target', colour, width, height, data.profitVsTarget)
   createLineChart('rph-vs-target', colour, width, height, data.revenuePerHeadVsTarget)
   createPieChart('revenue-vs-target-pie', colour, width, height, data.revenueVsTargetPie)
-  // createPieChart('#profit-vs-target-pie', width, height, data.profitVsTargetPie)
 
   // Sales
   colour = '#3A539B'
