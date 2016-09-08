@@ -7,7 +7,11 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
     , backgroundColor: colour
     , colors: [ 'white', 'black' ]
     , vAxis: {
-      format: 'short'
+        format: 'short'
+      , textStyle: { color: '#FFF' }
+    }
+    , hAxis: {
+      textStyle: { color: '#FFF' }
     }
     , fontSize: 12
     , chartArea: {
@@ -19,6 +23,7 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
     , legend: {
         position: data.getNumberOfColumns() > 2 ? 'top' : 'none'
       , alignment: 'end'
+      , textStyle: { color: '#FFF' }
     }
   }
 

@@ -8,7 +8,10 @@ module.exports = function createTargetLineGraphs (containerId, colour, w, h, dat
     , colors: [ 'black', 'white' ]
     , vAxis: {
         format: 'short'
-      , minValue: 0
+      , textStyle: { color: '#FFF' }
+    }
+    , hAxis: {
+      textStyle: { color: '#FFF' }
     }
     , fontSize: 12
     , chartArea: {
@@ -20,6 +23,7 @@ module.exports = function createTargetLineGraphs (containerId, colour, w, h, dat
     , legend: {
         position: 'top'
       , alignment: 'end'
+      , textStyle: { color: '#FFF' }
     }
   }
 
