@@ -12,8 +12,6 @@ function addPieStatus (targetId, dataSet) {
     , target = dataSet.getValue(0, 1)
     , difference = (currentValue / target) * 100
 
-  console.log(currentValue, target, difference, dataSet)
-
   $(targetId)
     .html(difference.toFixed(2) + '%')
     .css('color', colour)
