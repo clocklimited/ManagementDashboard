@@ -31,14 +31,15 @@ module.exports = function (dates) {
       oneMonthTarget = 0
     } else {
       oneMonthTarget /= 12
+      oneMonthTarget = +oneMonthTarget.toFixed(0)
     }
-    dates.forEach((item, index) => {
+    dates.forEach((date, index) => {
       runningTarget += oneMonthTarget
       runningRevenueTotal += data.getValue(index, 1)
       formatted.push([
-          item
-        , runningTarget
-        , runningRevenueTotal
+          date
+        , { v: runningTarget, f: formatCurrency(runningTarget) }
+        , { v: runningRevenueTotal, f: formatCurrency(runningRevenueTotal) }
       ])
     })
     return google.visualization.arrayToDataTable(formatted)
@@ -51,13 +52,19 @@ module.exports = function (dates) {
     dates.forEach((item, index) => {
       runningTotal += dataSet.getValue(index, 1)
     })
-
+    var amountToTarget = revenueTarget - runningTotal
     var dataTable = google.visualization.arrayToDataTable([
         [ 'Type', 'Value' ]
-      , [ 'Target', (revenueTarget - runningTotal) ]
-      , [ 'Value', runningTotal ]
+      , [ 'Target', { v: amountToTarget, f: formatCurrency(amountToTarget) } ]
+      , [ 'Value', { v: runningTotal, f: formatCurrency(runningTotal) } ]
     ])
     return dataTable
+  }
+
+  function formatCurrency (x) {
+    var parts = x.toString().split('.')
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    return '£' + parts.join('.')
   }
 
   return {
