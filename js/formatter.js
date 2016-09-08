@@ -1,15 +1,16 @@
 module.exports = function (dates) {
   function format (dataSet) {
     let formatted = [ [
-        { label: 'Date', type: 'string' }
-      , { label: 'Value', type: 'number' }
+        'Date'
+      , 'Value'
     ] ]
 
-    dataSet.forEach((item, index) => {
-      if (typeof item === 'string') {
-        item = item.replace(/£|,/g, '')
+    dates.forEach((date, index) => {
+      if (typeof dataSet[index] === 'string') {
+        dataSet[index] = dataSet[index].replace(/£|,/g, '')
       }
-      formatted.push([ dates[index], +validate(item, 0) ])
+
+      formatted.push([ date, +validate(dataSet[index], 0) ])
     })
 
     return google.visualization.arrayToDataTable(formatted)
@@ -19,10 +20,9 @@ module.exports = function (dates) {
     let keys = Object.keys(data)
       , formatted = [ ['Date'].concat(keys) ]
 
-    dates.forEach((item, index) => {
-      formatted.push([ item, +validate(data[keys[0]][index], 0), +validate(data[keys[1]][index], 0) ])
+    dates.forEach((date, index) => {
+      formatted.push([ date, +validate(data[keys[0]][index], 0), +validate(data[keys[1]][index], 0) ])
     })
-    console.log(formatted)
 
     return google.visualization.arrayToDataTable(formatted)
   }
@@ -55,7 +55,7 @@ module.exports = function (dates) {
   function formatPieChart (target, dataSet) {
     var revenueTarget = validate(+target.replace(/£|,/g, ''), 0)
       , runningTotal = 0
-      console.log(dataSet)
+
     dates.forEach((item, index) => {
       runningTotal += dataSet.getValue(index, 1)
     })
