@@ -8,42 +8,11 @@ const createPieChart = require('./createPieChartGoogle')
 
 let spreadSheetData = [ ]
   , data = {
-     revenueVsTarget: {
-        date: [ ]
-      , target: [ ]
-      , value: [ ]
-      }
-    , profitVsTarget: {
-        date: [ ]
-      , target: [ ]
-      , value: [ ]
-    }
-    , revenuePerHeadVsTarget: {
-        date: [ ]
-      , target: [ ]
-      , value: [ ]
-    }
-    , tickets: {
-          Opened: [ ]
-        , Closed: [ ]
-      }
-    , costs: {
-        Staff: [ ]
-      , Total: [ ]
-    }
-    , target: {
-        revenue: 0
-      , profit: 0
-      , revenuePerHead: 0
-      }
-    , staffSatisfaction: {
-        target: 0
-      , value: 0
-    }
-    , clientSatisfaction: {
-        target: 0
-      , value: 0
-    }
+      tickets: { }
+    , costs: { }
+    , target: { }
+    , staffSatisfaction: { }
+    , clientSatisfaction: { }
   }
   , spreadSheetTargets = [ ]
   , formatter
@@ -72,7 +41,6 @@ function getSpreadsheetData () {
       data.costs = formatter.format(data.costs)
       data.annuity = formatter.format({ Annuity: spreadSheetData[pos.ANNUITY].slice(start, end) })
       data.revenuePerHead = formatter.format({ RPH: spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end) })
-      // data.staffTurnover = format(data.dates, spreadSheetData[pos.STAFF_TURNOVER].slice(start, end))
       // SALES
       data.winRate = formatter.format({ WinRate: spreadSheetData[pos.WIN_RATE].slice(start, end) })
       data.closedDeals = formatter.format({ ClosedDeals: spreadSheetData[pos.CLOSED_DEALS].slice(start, end) })
@@ -90,7 +58,6 @@ function getSpreadsheetData () {
       data.clientSatisfaction.value = spreadSheetData[pos.CLIENT_SATISFACTION][end - 1]
 
       console.log('Formatted Data', data)
-      console.log('Current Month', currentMonth, currentMonthIndex, start, end)
       getSpreadsheetTargets()
     }
   })
@@ -109,7 +76,10 @@ function getSpreadsheetTargets () {
       data.clientSatisfaction.target = spreadSheetTargets[pos.TARGETS.CLIENT_SATISFACTION][1]
       data.revenueVsTarget = formatter.formatItemVsTarget({ Target: data.target.revenue, Revenue: data.revenue })
       data.profitVsTarget = formatter.formatItemVsTarget({ Target: data.target.profit, Profit: data.profit })
-      data.revenuePerHeadVsTarget = formatter.formatItemVsTarget({ Target: data.target.revenuePerHead, RPH: data.revenuePerHead }, true)
+      data.revenuePerHeadVsTarget = formatter.formatItemVsTarget({
+        Target: data.target.revenuePerHead
+      , RPH: data.revenuePerHead
+      }, true)
       data.revenueVsTargetPie = formatter.formatPieChart(data.target.revenue, data.revenue)
       repopulate()
     }
@@ -127,7 +97,6 @@ function repopulate () {
   createBarGraph('costs', colour, width, height, data.costs)
   createBarGraph('annuity', colour, width, height, data.annuity)
   createBarGraph('revenue-per-head', colour, width, height, data.revenuePerHead)
-  // createValueBarGraph('#staff-turnover', width, height, data.staffTurnover)
   createLineChart('revenue-vs-target', colour, width, height, data.revenueVsTarget)
   createLineChart('profit-vs-target', colour, width, height, data.profitVsTarget)
   createLineChart('rph-vs-target', colour, width, height, data.revenuePerHeadVsTarget)
@@ -142,8 +111,6 @@ function repopulate () {
 
   // Production
   colour = '#00B16A'
-  // createPercentageAreaGraph('#utilisation', width, height, 'data/utilisation.tsv')
-  // createValueBarGraph('#active-projects', width, height, 'data/projects.tsv')
   createBarGraph('tickets', colour, width, height, data.tickets)
 
   // HR Stats
