@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "watchify js/index.js -d -o src/bundle.js -v",
-    "build": "browserify js/index.js -o src/bundle.js"
+    "build": "browserify js/index.js -o src/bundle.js",
+    "start": "KEY_FILE=./binary/keyfile.json node server.js",
+    "start-dev": "KEY_FILE=./binary/keyfile.json nodemon server.js"
   },
   "repository": {
     "type": "git",

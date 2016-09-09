@@ -17,6 +17,7 @@ h1 {
 h2 {
   color: #666666;
   font-size: 3em;
+  margin-bottom: 0px;
 }
 h3 {
   font-size: 2em;
@@ -32,97 +33,25 @@ span {
   padding: 0px 5px 0px 5px;
 }
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: white;
-  shape-rendering: crispEdges;
-}
-
-.legend {
-  x: 0;
-  y: 0;
-}
-
-.legend text {
-  fill: white;
-}
-
-.graph path {
-  fill: none;
-  stroke-width: 2px;
-}
-
-.graph text {
-  fill: white;
-}
-
-.area1, .bar1 {
-  fill: white;
-}
-
-.area2, .bar2 {
-  fill: #333333;
+.group {
+  display: inline-block;
 }
 
 .row h3 {
   margin-left: 10px;
-  color: white;
+  color: #666666;
   margin-bottom: 0px;
+  z-index: 9999;
 }
 .row .graph, .table, .pie {
   margin: 8px;
   display: inline-block;
   background: #222222;
 }
-#finance.row .graph, .pie {
-  background: #444444;
-}
-#sales-section.row .graph {
-  background: #3A539B;/*#0B2F3D;*/
-}
-#production.row .graph {
-  background: #00B16A;
-}
-#human-resources.row .graph {
-  background: #8E44AD;/*#770077;*/
-}
+
 #human-resources.row .table {
   background: #8E44AD;/*#770077;*/
   vertical-align: top;
-}
-
-.valueText {
-  fill: black !important;
-  stroke-width: 1;
-  font-size: 18px;
-  z-index: 999;
-  text-anchor: start;
-  writing-mode: tb;
-  display: none;
-}
-
-#tooltip {
-    position: absolute;
-    width: 200px;
-    height: auto;
-    padding: 10px;
-    background-color: white;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
-    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
-    -mox-box-shadow: 4px 4px 4px 10px rgba(0, 0, 0, 0.4);
-    box-shadow: 4px 4px 10px rbga(0, 0, 0, 0.4) pointer-events: none;
-}
-#tooltip.hidden {
-    opacity: 0;
-}
-#tooltip p {
-    margin: 0;
-    font-family: sans-serif;
-    font-size: 16px;
-    line-height: 20px;
 }
 
 /* Flat Button @ http://cssdeck.com/labs/beautiful-flat-buttons
@@ -150,4 +79,88 @@ span {
   outline: none;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    padding-top: 16px;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal Header */
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.modal-header h2 {
+  color: white;
+  margin: 12px;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 2px 16px;
+}
+
+.modal-body table tr td {
+  /*border: 1px solid black;*/
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 6% auto;
+    padding: 0;
+    border: 2px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from { top: -300px; opacity: 0 } 
+    to { top: 0; opacity: 1 }
+}
+
+@keyframes animatetop {
+    from { top: -300px; opacity: 0 }
+    to { top: 0; opacity: 1 }
 }

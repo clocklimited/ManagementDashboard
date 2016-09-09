@@ -9,88 +9,138 @@ html
   body
     h1 Clock Management Dashboard
     #buttons.row
-      button.flat-button(id='valueToggle') Toggle Values
-      button.flat-button(id='legendToggle') Toggle Legends
-      button.flat-button(id='interactivityToggle') Toggle Interactivity
+      button.flat-button.js-zoom-toggle Toggle Zoom
       span#date 
-        input(id='monthPicker', style='width: 0px;')
+        input.js-month-picker(style='width: 0px;')
+      button.flat-button(id='selectButton') Select Graphs
 
     h2.finance Finance
     #finance.row
-      #revenue.graph
+      .group
         h3 Revenue 
           span#revenue-status
-      #profit.graph
+        #revenue.graph
+      .group
         h3 Profit 
           span#profit-status
-      #costs.graph
+        #profit.graph
+      .group
         h3 Costs
-      #annuity.graph
+        #costs.graph
+      .group
         h3 Annuity 
           span#annuity-status
-      #revenue-per-head.graph
-        h3 Revenue Per Head 
+        #annuity.graph  
+      .group
+        h3 Rev Per Head 
           span#revenue-per-head-status
-      #revenue-vs-target.graph
-        h3 Revenue VS Target 
+        #revenue-per-head.graph
+      .group
+        h3 Rev VS Target 
           span#revenue-vs-target-status.status
-      #profit-vs-target.graph
+        #revenue-vs-target.graph
+      .group
         h3 Profit VS Target 
           span#profit-vs-target-status.status
-      #rph-vs-target.graph
+        #profit-vs-target.graph
+      .group
         h3 RPH VS Target 
           span#rph-vs-target-status.status
-      #revenue-vs-target-pie.pie
-        h3 Revenue VS Target
+        #rph-vs-target.graph
+      .group
+        h3 Rev VS Target
           span#revenue-vs-target-pie-status.status
-      #profit-vs-target-pie.pie(style='display: none;')
-        h3 Profit VS Target
-          span#profit-vs-target-pie-status.status
-
+        #revenue-vs-target-pie.pie
+    
     h2.sales-section Sales
     #sales-section.row
-      #win-rate.graph
+      .group
         h3 Win Rate 
           span#win-rate-status.status
-      #closed-deals.graph
+        #win-rate.graph
+      .group
         h3 Closed Deals 
           span#closed-deals-status.status
-      #leads.graph
+        #closed-deals.graph
+      .group
         h3 Leads 
           span#leads-status.status
-      #pipeline.graph
+        #leads.graph
+      .group
         h3 Pipeline 
           span#pipeline-status.status
+        #pipeline.graph
+       
 
     h2.production Production
     #production.row
-      #tickets.graph
+      .group
         h3 Tickets
+        #tickets.graph
 
     h2.human-resources HR
     #human-resources.half.row
-      #head-count.graph
+      .group
         h3  Head Count
-      #holiday.graph
+        #head-count.graph
+      .group
         h3  Holiday
-      #sick-days.graph
+        #holiday.graph
+      .group
         h3  Sick Days
+        #sick-days.graph
+
       #satisfaction-group
-        #staff-satisfaction.graph
+        .group
           h3  Staff Satisfaction
-            span#staff-satisfaction-status.status
-          h4 Target
-            span#staff-satisfaction-target
-          h4 Current
-            span#staff-satisfaction-value
-        #client-satisfaction.graph
+          #staff-satisfaction.table
+            h4 Target
+              span#staff-satisfaction-target
+            h4 Current
+              span#staff-satisfaction-value
+        .group
           h3  Client Satisfaction
-            span#client-satisfaction-status.status
-          h4 Target
-            span#client-satisfaction-target
-          h4 Current
-            span#client-satisfaction-value
-  script(src='/src/d3.v3.min.js')
+          #client-satisfaction.table
+            h4 Target
+              span#client-satisfaction-target
+            h4 Current
+              span#client-satisfaction-value
+
+    .modal#selectModal
+      .modal-content
+        .modal-header
+          span.close X
+          h2 Hide Selected Graphs
+        .modal-body
+          h3 FINANCE
+          table
+            tbody
+              tr
+                td
+                  input(type='checkbox', id='revenueChk')
+                  p Revenue 
+                td
+                  p Profit
+                td
+                  p Costs
+                td
+                  p Annuity
+              tr
+                td
+                  p Revenue Per Head
+                td
+                  p Revenue VS Target
+                td
+                  p Profit VS Target
+                td
+                  p RPH VS Target
+              tr
+                td
+                  p Revenue VS Target (Pie)
+                td
+                  p Profit VS Target (Pie)
+
+  script(src='https://www.gstatic.com/charts/loader.js')
   script(src='https://code.jquery.com/jquery-3.1.0.min.js')
   script(src='https://code.jquery.com/ui/1.12.0/jquery-ui.min.js')
   script(src='/src/monthPicker.min.js')
@@ -107,17 +157,8 @@ html
       })
     }
 
-    $('#valueToggle').on('click', function () {
-      $('.valueText').each((i, e) => $(e).toggle())
-    })
-
-    $('#legendToggle').on('click', function () {
-      $('.legend').each((i, e) => $(e).toggle())
-    })
-
-    $('#interactivityToggle').on('click', function () {
+    $('.js-zoom-toggle').on('click', function () {
       events = $._data($('.graph')[0], "events")
-      console.dir(events)
       if (events && events.click) {
         $('.graph').off('click')
       } else {
@@ -134,11 +175,11 @@ html
       }
     })
 
-    $("#monthPicker").MonthPicker({
+    $('.js-month-picker').MonthPicker({
       Button: "<button id='dateToggle' class='flat-button'>Select Date</button>"
     , MonthFormat: 'MM yy'
     , OnAfterMenuClose: function() {
-      window.location.href = window.location.origin + '?month=' + $("#monthPicker").val()
+      window.location.href = window.location.origin + '?month=' + $('#monthPicker').val()
     }
     })
 
@@ -157,4 +198,30 @@ html
     $('.human-resources').on('click', function () {
       $('#human-resources').slideToggle('slow')
     })
+
+    // Get the modal
+    var modal = document.getElementById('selectModal')
+
+    // Get the button that opens the modal
+    var btn = document.getElementById('selectButton')
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName('close')[0]
+
+    // When the user clicks on the button, open the modal 
+    btn.onclick = function() {
+        modal.style.display = 'block'
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = 'none'
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none'
+        }
+    }
 
