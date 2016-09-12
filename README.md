@@ -50,7 +50,9 @@ Open browser to `localhost:9001`
 
 Build index.js with `npm run build`
 
-Run server with `node server.js` (Or a `nodemon`-like program)
+Generate a secret key for session signing (`<SECRET_KEY>`)
+
+Run server with `SECRET=<SECRET_KEY> node server.js` (Or a `nodemon`-like program)
 
 Open browser to `localhost:9001`
 
