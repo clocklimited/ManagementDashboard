@@ -13,7 +13,10 @@ html
       span#date 
         input.js-month-picker(style='width: 0px;')
       button.flat-button(id='selectButton') Select Graphs
-      input.flat-button(type='button' onclick='location.pathname=\'/logout\'' value='LOGOUT')
+      a(href='/logout')
+        button.flat-button Logout
+      a(href='/refresh')
+        button.flat-button Refresh Cache
 
     h2.finance Finance
     #finance.row
