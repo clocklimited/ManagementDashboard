@@ -10,7 +10,8 @@ Create a new project.
 
 Head to `Credentials`, then click `Create credentials` and then `Service account key`. Under `Service account`, select `New service account`. Now name the new service account, with a role of `Viewer` (under `Project`).
 
-For the key type, select `JSON`. Click `Create` to generate and download the service account key. **This file cannot be recovered if lost, keep it safe and secure.**
+For the key type, select `JSON`. Click `Create` to generate and download the service account key.
+**This file cannot be recovered if lost, keep it safe and secure.**
 
 Rename it to `keyfile.json`, and move it into the `/lib/binary` directory (create it if needed).
 
@@ -18,9 +19,9 @@ Once completed, head back to the `Credentials` page, click `Create credentials` 
 
 The application type is `Web application`. Set the name, and then set the `Authorised JavaScript origins` field to the address and port of the server, eg `http://localhost.clockhosting.com:9001`.
 
-Set the `Authorised redirect URIs` field to the same ad the `origins` field, but append `/auth/google/callback`.
+Set the `Authorised redirect URIs` field to the same as the `origins` field, but append `/auth/google/callback`.
 
-Click `Create`, press `OK` (we will download the credentials as a file), then click on the name of the OAuth client you just created.
+Click `Create`, press `OK` (we will download the credentials as a file next), then click on the name of the OAuth client you just created.
 
 Click `Download JSON` to download the OAuth Client details. **This file can be regenerated but must be kept secure.**
 
