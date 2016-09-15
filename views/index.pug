@@ -11,7 +11,7 @@ html
     #buttons.row
       button.flat-button.js-zoom-toggle Toggle Zoom
       span#date 
-        input.js-month-picker(style='width: 0px;')
+        input.js-month-picker(style='width: 0px; height: 0px;')
       button.flat-button(id='selectButton') Select Graphs
       a(href='/logout')
         button.flat-button Logout
@@ -19,7 +19,7 @@ html
         button.flat-button Refresh Cache
 
     h2.finance Finance
-    #finance.row
+    #finance.row.js-toggle-finance
       .group
         h3 Revenue 
           span#revenue-status
@@ -57,7 +57,7 @@ html
         #revenue-vs-target-pie.pie
     
     h2.sales-section Sales
-    #sales-section.row
+    #sales-section.row.js-toggle-sales
       .group
         h3 Closed Deals 
           span#closed-deals-status.status
@@ -69,13 +69,13 @@ html
        
 
     h2.production Production
-    #production.row
+    #production.row.js-toggle-production
       .group
         h3 Tickets
         #tickets.graph
 
     h2.human-resources HR
-    #human-resources.half.row
+    #human-resources.half.row.js-toggle-hr
       .group
         h3  Head Count
         #head-count.graph
@@ -110,28 +110,34 @@ html
             tbody
               tr
                 td
-                  input(type='checkbox', id='revenueChk')
-                  p Revenue 
+                  input(type='checkbox', id='revenueChk' checked)
+                  label(for='revenueChk') Revenue 
                 td
-                  p Profit
+                  input(type='checkbox', id='profitChk' checked)
+                  label(for='profitChk') Profit
                 td
-                  p Costs
+                  input(type='checkbox', id='costsChk' checked)
+                  label(for='costsChk') Costs
                 td
-                  p Annuity
+                  input(type='checkbox', id='annuityChk' checked)
+                  label(for='annuityChk') Annuity
               tr
                 td
-                  p Revenue Per Head
+                  input(type='checkbox', id='rhpChk' checked)
+                  label(for='rhpChk') Revenue Per Head
                 td
-                  p Revenue VS Target
+                  input(type='checkbox', id='rvtChk' checked)
+                  label(for='rvtChk') Revenue VS Target
                 td
-                  p Profit VS Target
+                  input(type='checkbox', id='pvtChk' checked)
+                  label(for='pvtChk') Profit VS Target
                 td
-                  p RPH VS Target
+                  input(type='checkbox', id='rphvtChk' checked)
+                  label(for='rphvtChk') RPH VS Target
               tr
                 td
-                  p Revenue VS Target (Pie)
-                td
-                  p Profit VS Target (Pie)
+                  input(type='checkbox', id='rvtpieChk' checked)
+                  label(for='rvtpieChk') Revenue VS Target (Pie)
 
   script(src='https://www.gstatic.com/charts/loader.js')
   script(src='https://code.jquery.com/jquery-3.1.0.min.js')
@@ -177,19 +183,19 @@ html
     })
 
     $('.finance').on('click', function () {
-      $('#finance').slideToggle('slow')
+      $('.js-toggle-finance').slideToggle('slow')
     })
 
     $('.sales-section').on('click', function () {
-      $('#sales-section').slideToggle('slow')
+      $('.js-toggle-sales').slideToggle('slow')
     })
 
     $('.production').on('click', function () {
-      $('#production').slideToggle('slow')
+      $('.js-toggle-production').slideToggle('slow')
     })
 
     $('.human-resources').on('click', function () {
-      $('#human-resources').slideToggle('slow')
+      $('.js-toggle-hr').slideToggle('slow')
     })
 
     // Get the modal
