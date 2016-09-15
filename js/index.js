@@ -42,9 +42,7 @@ function getSpreadsheetData () {
       data.annuity = formatter.format({ Annuity: spreadSheetData[pos.ANNUITY].slice(start, end) })
       data.revenuePerHead = formatter.format({ RPH: spreadSheetData[pos.REVENUE_PER_HEAD].slice(start, end) })
       // SALES
-      data.winRate = formatter.format({ WinRate: spreadSheetData[pos.WIN_RATE].slice(start, end) })
       data.closedDeals = formatter.format({ ClosedDeals: spreadSheetData[pos.CLOSED_DEALS].slice(start, end) })
-      data.leads = formatter.format({ Leads: spreadSheetData[pos.LEADS].slice(start, end) })
       data.pipeline = formatter.format({ Pipeline: spreadSheetData[pos.PIPELINE].slice(start, end) })
       // PRODUCTION
       data.tickets.Opened = spreadSheetData[pos.TICKETS_OPENED].slice(start, end)
@@ -53,7 +51,6 @@ function getSpreadsheetData () {
       // HR
       data.headCount = formatter.format({ HeadCount: spreadSheetData[pos.HEAD_COUNT].slice(start, end) })
       data.sickDays = formatter.format({ SickDays: spreadSheetData[pos.SICK_DAYS].slice(start, end) })
-      data.holiday = formatter.format({ Holiday: spreadSheetData[pos.HOLIDAY].slice(start, end) })
       data.staffSatisfaction.value = spreadSheetData[pos.STAFF_SATISFACTION][end - 1]
       data.clientSatisfaction.value = spreadSheetData[pos.CLIENT_SATISFACTION][end - 1]
 
@@ -104,9 +101,7 @@ function repopulate () {
 
   // Sales
   colour = '#3A539B'
-  createBarGraph('win-rate', colour, width, height, data.winRate)
   createBarGraph('closed-deals', colour, width, height, data.closedDeals)
-  createBarGraph('leads', colour, width, height, data.leads)
   createBarGraph('pipeline', colour, width, height, data.pipeline)
 
   // Production
@@ -117,7 +112,6 @@ function repopulate () {
   colour = '#8E44AD'
   createBarGraph('head-count', colour, width, height, data.headCount)
   createBarGraph('sick-days', colour, width, height, data.sickDays)
-  createBarGraph('holiday', colour, width, height, data.holiday)
   addDetails('#staff-satisfaction', width, height / 2, data.staffSatisfaction)
   addDetails('#client-satisfaction', width, height / 2, data.clientSatisfaction)
 }

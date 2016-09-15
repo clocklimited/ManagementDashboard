@@ -19,12 +19,9 @@
   , "TICKETS_OPENED":     17
   , "TICKETS_CLOSED":     18
   , "STAFF_SATISFACTION": 19
-  , "WIN_RATE":           20
-  , "HOLIDAY":            21
-  , "COSTS_STAFF":        22
-  , "COSTS_TOTAL":        23
-  , "LEADS":              24
-  , "CLIENT_SATISFACTION": 25
+  , "COSTS_STAFF":        20
+  , "COSTS_TOTAL":        21
+  , "CLIENT_SATISFACTION": 22
   , "TARGETS": {
       "REVENUE":            1
     , "PROFIT":             2
