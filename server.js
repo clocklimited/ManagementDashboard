@@ -1,11 +1,11 @@
 var express = require('express')
   , port = process.env.PORT || 9001
   , app = express()
-  , SheetsHelper = require('./lib/SheetsHelper')
+  , SheetsHelper = require('./lib/sheets-helper')
   , spreadsheetId = '1vYkw_63Ak4tGoBvD1uT_hDxSMEWmgydyPLg2nHr9FPc' // Development Sheet
   // , spreadsheetId = '1Pt0CFzEwJx-AYT0H98OKwoDkmpPw6xvYujc04eo2e7o' // Live Sheet
   , session = require('express-session')
-  , passportConfig = require('./lib/passportConfig')
+  , passportConfig = require('./lib/passport-config')
   , NodeCache = require('node-cache')
   , cache = new NodeCache({ stdTTL: (12 * 60 * 60) })
 

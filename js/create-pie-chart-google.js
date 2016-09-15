@@ -1,4 +1,4 @@
-const addStatus = require('./addStatus')
+const addStatus = require('./add-status')
 
 module.exports = function (containerId, colour, w, h, data) {
   var options = {

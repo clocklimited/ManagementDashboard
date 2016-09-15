@@ -1,11 +1,11 @@
-const addStatus = require('./addStatus')
+const addStatus = require('./add-status')
 
-module.exports = function createBarGraph (containerId, colour, w, h, data) {
+module.exports = function createTargetLineGraphs (containerId, colour, w, h, data) {
   var options = {
       width: w
     , height: h
     , backgroundColor: colour
-    , colors: [ 'white', 'black' ]
+    , colors: [ 'black', 'white' ]
     , vAxis: {
         format: 'short'
       , textStyle: { color: '#FFF' }
@@ -21,15 +21,14 @@ module.exports = function createBarGraph (containerId, colour, w, h, data) {
       , height: '75%'
     }
     , legend: {
-        position: data.getNumberOfColumns() > 2 ? 'top' : 'none'
+        position: 'top'
       , alignment: 'end'
       , textStyle: { color: '#FFF' }
     }
   }
 
-  var chart = new google.visualization.ColumnChart(document.getElementById(containerId))
+  var chart = new google.visualization.LineChart(document.getElementById(containerId))
   chart.draw(data, options)
 
   addStatus(`#${containerId}-status`, data)
 }
-
