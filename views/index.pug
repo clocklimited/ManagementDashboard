@@ -5,20 +5,23 @@ html
   link(rel='stylesheet', type='text/css', href='css/dashboard.css')
   link(rel='stylesheet', type='text/css', href='/src/jquery-ui.css')
   link(rel='stylesheet', type='text/css', href='/src/monthPicker.min.css')
+  link(rel='stylesheet' href='//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css')
   title Clock Management Dashboard
   body
     h1 Clock Management Dashboard
     #buttons.row
-      button.flat-button.js-zoom-toggle Toggle Zoom
       span#date 
         input.js-month-picker(style='width: 0px; height: 0px;')
+      button.flat-button.js-zoom-toggle Toggle Zoom
       button.flat-button(id='selectButton') Select Graphs
       a(href='/logout')
         button.flat-button Logout
       a(href='/refresh')
         button.flat-button Refresh Cache
 
-    h2.finance Finance
+    h2.finance
+      span.fa.fa-gbp.fa-fw
+      |  Finance
     #finance.row.js-toggle-finance
       .group
         h3 Revenue 
@@ -56,7 +59,9 @@ html
           span#revenue-vs-target-pie-status.status
         #revenue-vs-target-pie.pie
     
-    h2.sales-section Sales
+    h2.sales-section
+      span.fa.fa-shopping-cart.fa-fw
+      |  Sales
     #sales-section.row.js-toggle-sales
       .group
         h3 Closed Deals 
@@ -68,13 +73,17 @@ html
         #pipeline.graph
        
 
-    h2.production Production
+    h2.production
+      span.fa.fa-cogs.fa-fw
+      |  Production
     #production.row.js-toggle-production
       .group
         h3 Tickets
         #tickets.graph
 
-    h2.human-resources HR
+    h2.human-resources
+      span.fa.fa-users.fa-fw
+      |  HR
     #human-resources.half.row.js-toggle-hr
       .group
         h3  Head Count
@@ -103,7 +112,7 @@ html
       .modal-content
         .modal-header
           span.close X
-          h2 Hide Selected Graphs
+          h2 Show Selected Graphs
         .modal-body
           h3 FINANCE
           table

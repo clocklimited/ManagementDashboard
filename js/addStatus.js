@@ -24,7 +24,7 @@ function addStatus (targetId, dataSet) {
     , target
     , previous
     , difference
-    , arrow = '&#8212;' // Dash
+    , arrow = '<i class="fa fa-minus"></i>'
     , colour = 'black'
 
   if (dataSet.getFilteredRows([{ column: 1, minValue: 1 }]).length === 0) {
@@ -42,13 +42,13 @@ function addStatus (targetId, dataSet) {
   }
 
   if (difference === 0) {
-    arrow = '&#8212;' // Dash
+    arrow = '<i class="fa fa-minus"></i>'
     colour = 'black'
   } else if (difference > 0) {
-    arrow = '&#x25B2;' // Up arrow
+    arrow = '<i class="fa fa-caret-up"></i>'
     colour = 'rgb(10, 220, 10)'
   } else if (difference < 0) {
-    arrow = '&#x25BC;' // Down arrow
+    arrow = '<i class="fa fa-caret-down"></i>'
     colour = 'rgb(210, 8, 8)'
   }
   $(targetId)
