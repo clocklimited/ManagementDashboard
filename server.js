@@ -15,7 +15,8 @@ app.use(session({
   , saveUninitialized: true
 }))
 app.set('view engine', 'pug')
-app.use(express.static(__dirname))
+app.use('/src', express.static(__dirname + '/src'))
+app.use('/css', express.static(__dirname + '/css'))
 app.enable('trust proxy')
 
 passportConfig(app)
