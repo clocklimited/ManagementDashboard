@@ -1,9 +1,9 @@
+require('dotenv').load()
 var express = require('express')
   , port = process.env.PORT || 9001
   , app = express()
   , SheetsHelper = require('./lib/sheets-helper')
-  , spreadsheetId = '1vYkw_63Ak4tGoBvD1uT_hDxSMEWmgydyPLg2nHr9FPc' // Development Sheet
-  // , spreadsheetId = '1Pt0CFzEwJx-AYT0H98OKwoDkmpPw6xvYujc04eo2e7o' // Live Sheet
+  , spreadsheetId = process.env.SPREADSHEET_ID || ''
   , session = require('express-session')
   , passportConfig = require('./lib/passport-config')
   , NodeCache = require('node-cache')
