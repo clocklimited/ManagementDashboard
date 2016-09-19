@@ -6,33 +6,71 @@ Run `npm install` first.
 
 Go to the [Google Developers Console](https://console.developers.google.com/apis).
 
-Create a new project.
+Create a new project. Be sure to enable the Sheets and Google+ APIs.
 
 Head to `Credentials`, then click `Create credentials` and then `Service account key`. Under `Service account`, select `New service account`. Now name the new service account, with a role of `Viewer` (under `Project`).
 
 For the key type, select `JSON`. Click `Create` to generate and download the service account key.
 **This file cannot be recovered if lost, keep it safe and secure.**
 
-Rename it to `keyfile.json`, and move it into the `/lib/binary` directory (create it if needed).
+Create a new file called `.env` in the project root.
+
+Add the fields from the service account key file:
+
+```
+CLIENT_EMAIL=<client email>
+PRIVATE_KEY="<private key>"
+```
+
+**Note the double quotes around the private key - it preserves the newlines. The client email does not need quotes.**
+
 
 Once completed, head back to the `Credentials` page, click `Create credentials` and then `OAuth Client ID`.
 
-The application type is `Web application`. Set the name, and then set the `Authorised JavaScript origins` field to the address and port of the server, eg `http://localhost.clockhosting.com:9001`.
+The application type is `Web application`. Set the name, and then set the `Authorised JavaScript origins` field to the address and port of the server, e.g. `http://localhost.clockhosting.com:9001`.
 
 Set the `Authorised redirect URIs` field to the same as the `origins` field, but append `/auth/google/callback`.
 
-Click `Create`, press `OK` (we will download the credentials as a file next), then click on the name of the OAuth client you just created.
+E.g. `http://localhost.clockhosting.com:9001/auth/google/callback`
 
-Click `Download JSON` to download the OAuth Client details. **This file can be regenerated but must be kept secure.**
+Click `Create`, press `OK`, then click on the name of the OAuth client you just created.
 
-Rename the file to `oauth.json` and place it in the `/lib/binary` directory with `keyfile.json`.
+Go back to the `.env` file created earlier. Add the following fields from the OAuth screen.
 
-Open `keyfile.json` and copy the `client_email` field.
+```
+CLIENT_ID=<client ID>
+CLIENT_SECRET=<client secret>
+REDIRECT_URI=<callback URL>
+```
 
-Now, head to the spreadsheets that the service account needs access to.
+Now copy the `CLIENT_EMAIL` field from the `.env` file.
 
-Go to `File > Share` and enter the `client_email` you copied from the key file. **Be sure to set the permission to `Can View` only.**
+Then, head to the spreadsheets that the service account needs access to.
 
+Go to `File > Share` and enter the `CLIENT_EMAIL` you just copied. **Be sure to set the permission to `Can View` only.**
+
+Copy the spreadsheet ID from the URL of the spreadsheet.
+
+E.g. If the URL looks like this: `https://docs.google.com/spreadsheets/d/`**`1w0lDCtRFVP1wLwmOXBTMMcLX6Kt1MNkzr5DQj2QBQ-c`**`/edit#gid=0`
+
+You only need what is in bold. Enter a final field into the `.env` file:
+
+```
+SPREADSHEET_ID=<spreadsheet id>
+```
+
+To confirm, your `.env` file should look similar to this:
+
+```
+SPREADSHEET_ID=1w0lDCtRFVP1wLwmOXBTMMcLX6Kt1MNkzr5DQj2QBQ-c
+
+CLIENT_ID=1707mkivcbi218h30fcjhh2kqi166-mq.apps.googleusercontent.com
+CLIENT_SECRET=9ojyR6766DdSvSyIqHopbqj12e8voqLHvUC17
+REDIRECT_URI=http://localhost:9001/auth/google/callback
+
+CLIENT_EMAIL=default@hello-world-project-9001.iam.gserviceaccount.com
+PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvgIBADAN=\n-----END PRIVATE KEY-----\n"
+```
 
 That's it! Well done old chap.
 
@@ -54,13 +92,21 @@ Open browser to `localhost:9001`
 
 Build index.js with `npm run build`
 
-Generate a secret key for session signing (recommended).
+Generate a secret key for session signing (recommended). Append it to the `.env` file as "SECRET"
 
-Run server with `SECRET=<SECRET_KEY> node server.js` (Or a `nodemon`-like program)
+Run server with `node server.js` (Or a `nodemon`-like program)
 
 Optionally, you can set the port with the `PORT` environment variable.
 
 Open browser to `localhost:9001`
+
+### Heroku
+
+For Heroku, the `.env` file is unused.
+
+You will have to add each of the items in `.env` to the config variables for the project.
+
+Aside from that, deploy as normal.
 
 ## Other notes
 
