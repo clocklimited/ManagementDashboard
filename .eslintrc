@@ -1,0 +1,30 @@
+{
+  "extends": "clock",
+
+  "env": {
+    "es6": false
+  },
+
+  "globals": {
+    "describe": true,
+    "it": true,
+    "before": true,
+    "beforeEach": true,
+    "after": true,
+    "afterEach": true,
+    "history": true,
+    "$": true,
+    "Backbone": true,
+    "d3": true,
+    "google": true
+  },
+
+  "rules": {
+    "handle-callback-err": 0,
+    "new-cap": 0,
+    "no-extra-parens": 0,
+    "one-var": 0,
+    "operator-linebreak": 0,
+    "spaced-comment": 0
+  }
+}

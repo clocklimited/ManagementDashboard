@@ -6,7 +6,7 @@ body {
   color: #666666;
 }
 
-h1, h2, h3, h4, h5 {
+h1, h2, h3, h4, h5, button {
   font-family: 'LatoBold', Arial, sans-serif;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -17,52 +17,150 @@ h1 {
 h2 {
   color: #666666;
   font-size: 3em;
+  margin-bottom: 0px;
 }
-.axis path,
-.axis line {
-  fill: none;
-  stroke: white;
-  shape-rendering: crispEdges;
+h3 {
+  font-size: 2em;
 }
-
-.legend {
-  x: 0;
-  y: 0;
+h4 {
+  font-size: 1.5em;
+  margin-left: 20px;
+  color: white;
 }
 
-text {
-  fill: white;
-}
-.area1, .bar1 {
-  fill: white;
+span {
+  color: black;
+  padding: 0px 5px 0px 5px;
 }
 
-.area2, .bar2 {
-  fill: #333333;
+.group {
+  display: inline-block;
 }
 
 .row h3 {
   margin-left: 10px;
-  color: white;
+  color: #666666;
   margin-bottom: 0px;
+  z-index: 9999;
 }
-.row .graph {
-  margin: 0px;
+.row .graph, .table, .pie {
+  margin: 8px;
   display: inline-block;
   background: #222222;
 }
-#production.row .graph {
-  background: green;
+
+#human-resources.row .table {
+  background: #8E44AD;/*#770077;*/
+  vertical-align: top;
 }
-#sales-section.row .graph {
-  background: red;
+
+/* Flat Button @ http://cssdeck.com/labs/beautiful-flat-buttons
+==================================================*/
+.flat-button {
+  position: relative;
+  vertical-align: top;
+  width: 10%;
+  height: 60px;
+  padding: 0;
+  margin: 2px;
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  background: #454545;
+  border: 0;
+  border-bottom: 2px solid #2f2e2e;
+  cursor: pointer;
+  -webkit-box-shadow: inset 0 -2px #2f2e2e;
+  box-shadow: inset 0 -2px #2f2e2e;
 }
-#finance.row .graph {
-  background: #666666;
+.flat-button:active {
+  top: 1px;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
-#human-resources.row .graph {
-  background: #770077;
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
-#marketing.row .graph {
-  background: #0000aa;
+
+/* The Close Button */
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    padding-top: 16px;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal Header */
+.modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.modal-header h2 {
+  color: white;
+  margin: 12px;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 2px 16px;
+}
+
+.modal-body table tr td {
+  /*border: 1px solid black;*/
+}
+
+/* Modal Footer */
+.modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: 6% auto;
+    padding: 0;
+    border: 2px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from { top: -300px; opacity: 0 } 
+    to { top: 0; opacity: 1 }
+}
+
+@keyframes animatetop {
+    from { top: -300px; opacity: 0 }
+    to { top: 0; opacity: 1 }
 }

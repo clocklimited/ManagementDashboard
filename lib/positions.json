@@ -1,0 +1,32 @@
+{
+    "MONTH":              0
+  , "ACTUAL_ESTIMATE":    1
+  , "BOARDPACK_DATE":     2
+  , "CUMULATIVE_REVENUE": 3
+  , "REVENUE":            4
+  , "PROFIT":             5
+  , "CUMULATIVE_LOSS_PROFIT": 6
+  , "ANNUITY":            7
+  , "HEAD_COUNT":         8
+  , "WTE":                9
+  , "PIPELINE":           10
+  , "CLOSED_DEALS":       11
+  , "STAFF_TURNOVER":     12
+  , "REVENUE_PER_HEAD":   13
+  , "HOSTING_UPTIME":     14
+  , "HOSTING_INCIDENTS":  15
+  , "SICK_DAYS":          16
+  , "TICKETS_OPENED":     17
+  , "TICKETS_CLOSED":     18
+  , "STAFF_SATISFACTION": 19
+  , "COSTS_STAFF":        20
+  , "COSTS_TOTAL":        21
+  , "CLIENT_SATISFACTION": 22
+  , "TARGETS": {
+      "REVENUE":            1
+    , "PROFIT":             2
+    , "CLIENT_SATISFACTION": 3
+    , "STAFF_SATISFACTION": 4
+    , "REVENUE_PER_HEAD":   5
+  }
+}

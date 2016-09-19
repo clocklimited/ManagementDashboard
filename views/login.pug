@@ -1,0 +1,22 @@
+doctype html
+html
+head
+  title Management Dashboard
+  link(rel='stylesheet' href='//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css')
+  link(rel='stylesheet' href='//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css')
+body(style='padding-top: 40px;')
+  .container
+    .jumbotron.text-center
+      h1
+        span.fa.fa-lock
+        |  Management Dashboard
+
+      a.btn.btn-danger(href='/auth/google')
+        span.fa.fa-google-plus
+        |  Login with Google
+  if error
+    .container
+      .jumbotron.text-center
+        h2
+          span.fa.fa-times-circle(style='color: red;')
+          |  Sorry, you can't log in on that domain.
