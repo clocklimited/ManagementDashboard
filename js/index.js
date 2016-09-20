@@ -5,6 +5,8 @@ const createPieChart = require('./create-pie-chart-google')
     , moment = require('moment')
     , pos = require('../lib/positions.json')
     , createFormatter = require('./formatter')
+    , modalActions = require('./modal-actions')
+    , addToggles = require('./add-toggles')
 
 let spreadSheetData = [ ]
   , data = {
@@ -123,3 +125,14 @@ function getUrlParameter (name) {
 
 google.charts.load('current', { packages: [ 'corechart' ] })
 google.charts.setOnLoadCallback(getSpreadsheetData)
+
+modalActions()
+addToggles()
+
+$('.js-month-picker').MonthPicker({
+  Button: '<button class=\'flat-button\'>Select Date</button>'
+, MonthFormat: 'MM yy'
+, OnAfterMenuClose: function () {
+  window.location = window.location.origin + '/show?month=' + $('.js-month-picker').val()
+}
+})
