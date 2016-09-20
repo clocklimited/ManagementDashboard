@@ -36,7 +36,6 @@ function processSpreadsheetData (body, month) {
     , start = currentMonthIndex <= range ? 1 : currentMonthIndex - range
     , end = currentMonthIndex
 
-  console.log(currentMonth, currentMonthIndex, start, end)
   // Reset data
   data = {
       tickets: { }

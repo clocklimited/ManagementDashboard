@@ -119,34 +119,68 @@ html
             tbody
               tr
                 td
-                  input(type='checkbox', id='revenueChk' checked)
-                  label(for='revenueChk') Revenue 
+                  input(type='checkbox', id='revenue-check' checked)
+                  label(for='revenue-check') Revenue 
                 td
-                  input(type='checkbox', id='profitChk' checked)
-                  label(for='profitChk') Profit
+                  input(type='checkbox', id='profit-check' checked)
+                  label(for='profit-check') Profit
                 td
-                  input(type='checkbox', id='costsChk' checked)
-                  label(for='costsChk') Costs
+                  input(type='checkbox', id='costs-check' checked)
+                  label(for='costs-check') Costs
                 td
-                  input(type='checkbox', id='annuityChk' checked)
-                  label(for='annuityChk') Annuity
+                  input(type='checkbox', id='annuity-check' checked)
+                  label(for='annuity-check') Annuity
               tr
                 td
-                  input(type='checkbox', id='rhpChk' checked)
-                  label(for='rhpChk') Revenue Per Head
+                  input(type='checkbox', id='revenue-per-head-check' checked)
+                  label(for='revenue-per-head-check') Revenue Per Head
                 td
-                  input(type='checkbox', id='rvtChk' checked)
-                  label(for='rvtChk') Revenue VS Target
+                  input(type='checkbox', id='revenue-vs-target-check' checked)
+                  label(for='revenue-vs-target-check') Revenue VS Target
                 td
-                  input(type='checkbox', id='pvtChk' checked)
-                  label(for='pvtChk') Profit VS Target
+                  input(type='checkbox', id='profit-vs-target-check' checked)
+                  label(for='profit-vs-target-check') Profit VS Target
                 td
-                  input(type='checkbox', id='rphvtChk' checked)
-                  label(for='rphvtChk') RPH VS Target
+                  input(type='checkbox', id='rph-vs-target-check' checked)
+                  label(for='rph-vs-target-check') RPH VS Target
               tr
                 td
-                  input(type='checkbox', id='rvtpieChk' checked)
-                  label(for='rvtpieChk') Revenue VS Target (Pie)
+                  input(type='checkbox', id='revenue-vs-target-pie-check' checked)
+                  label(for='revenue-vs-target-pie-check') Revenue VS Target (Pie)
+          h3 SALES
+          table
+            tbody
+              tr
+                td
+                  input(type='checkbox', id='closed-deals-check' checked)
+                  label(for='closed-deals-check') Closed Deals
+                td
+                  input(type='checkbox', id='pipeline-check' checked)
+                  label(for='pipeline-check') Pipeline
+          h3 PRODUCTION
+          table
+            tbody
+              tr
+                td
+                  input(type='checkbox', id='tickets-check' checked)
+                  label(for='tickets-check') Tickets
+          h3 HR
+          table
+            tbody
+              tr
+                td
+                  input(type='checkbox', id='head-count-check' checked)
+                  label(for='head-count-check') Head Count
+                td
+                  input(type='checkbox', id='sick-days-check' checked)
+                  label(for='sick-days-check') Sick Days
+              tr
+                td
+                  input(type='checkbox', id='staff-satisfaction-check' checked)
+                  label(for='staff-satisfaction-check') Staff Satisfaction
+                td
+                  input(type='checkbox', id='client-satisfaction-check' checked)
+                  label(for='client-satisfaction-check') Client Satisfaction
 
   script(src='https://www.gstatic.com/charts/loader.js')
   script(src='https://code.jquery.com/jquery-3.1.0.min.js')
