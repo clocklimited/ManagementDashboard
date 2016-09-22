@@ -138,9 +138,22 @@ function addDateDropdown () {
     newOption.selected = dateParsed === hashParsed
     $('select').append(newOption).trigger('change')
   })
-  $('b[role="presentation"]').hide()
 
-  $('.select2-arrow').append('<i class="fa fa-angle-down"></i>')
+}
+
+function initDropdown () {
+  $('select.js-date-dropdown').select2({ dropdownCssClass: 'select-inverse-dropdown' })
+  $('b[role="presentation"]').parent()
+    .removeClass('select2-arrow')
+    .addClass('down-arrow')
+
+  var icon = $('<i class="fa fa-caret-down"></i>')
+  icon.css({
+    color: 'white'
+  , 'font-size': '20px'
+  })
+  $('.down-arrow').append(icon)
+
 }
 
 $('select.js-date-dropdown').on('change', function (e) {
@@ -155,8 +168,7 @@ google.charts.setOnLoadCallback(getSpreadsheetData)
 
 modalActions()
 addToggles()
-
-$('select.js-date-dropdown').select2({ dropdownCssClass: 'select-inverse-dropdown' })
+initDropdown()
 
 $(window).bind('hashchange', function () {
   var month = decodeURIComponent(window.location.hash).replace('#', '')
