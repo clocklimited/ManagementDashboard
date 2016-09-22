@@ -12,6 +12,7 @@ let spreadSheetData = [ ]
   , data
   , spreadSheetTargets = [ ]
   , formatter
+  , firstLoad = true
 
 function getSpreadsheetData () {
   return $.ajax({
@@ -47,6 +48,7 @@ function processSpreadsheetData (body, month) {
 
   data.dates = spreadSheetData[pos.MONTH].slice(start, end)
   data.dates = data.dates.map((date) => moment(date, 'MMMM YYYY').format('MMM YY'))
+
   formatter = createFormatter(data.dates)
   // FINANCE
   data.revenue = formatter.format({ Revenue: spreadSheetData[pos.REVENUE].slice(start, end) })
@@ -121,7 +123,32 @@ function repopulate () {
   createBarGraph('sick-days', colour, width, height, data.sickDays)
   addDetails('#staff-satisfaction', width, height / 2, data.staffSatisfaction)
   addDetails('#client-satisfaction', width, height / 2, data.clientSatisfaction)
+
+  if (firstLoad) {
+    addDateDropdown()
+    firstLoad = false
+  }
 }
+
+function addDateDropdown () {
+  $.each(data.dates, function () {
+    var dateParsed = moment(this, 'MMM YYYY').format('MMMM YYYY')
+      , hashParsed = moment(window.location.hash, 'MMM YYYY').format('MMMM YYYY')
+      , newOption = new Option(dateParsed, dateParsed)
+    newOption.selected = dateParsed === hashParsed
+    $('select').append(newOption).trigger('change')
+  })
+  $('b[role="presentation"]').hide()
+
+  $('.select2-arrow').append('<i class="fa fa-angle-down"></i>')
+}
+
+$('select.js-date-dropdown').on('change', function (e) {
+  var selected = $(e.currentTarget).find(':selected').val()
+  if (selected !== '') {
+    window.location.hash = selected
+  }
+})
 
 google.charts.load('current', { packages: [ 'corechart' ] })
 google.charts.setOnLoadCallback(getSpreadsheetData)
@@ -129,13 +156,7 @@ google.charts.setOnLoadCallback(getSpreadsheetData)
 modalActions()
 addToggles()
 
-$('.js-month-picker').MonthPicker({
-  Button: '<button class=\'flat-button\'>Select Date</button>'
-, MonthFormat: 'MM yy'
-, OnAfterMenuClose: function () {
-  window.location.hash = $('.js-month-picker').val()
-}
-})
+$('select.js-date-dropdown').select2({ dropdownCssClass: 'select-inverse-dropdown' })
 
 $(window).bind('hashchange', function () {
   var month = decodeURIComponent(window.location.hash).replace('#', '')

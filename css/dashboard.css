@@ -6,7 +6,7 @@ body {
   color: #666666;
 }
 
-h1, h2, h3, h4, h5, button {
+h1, h2, h3, h4, h5, button, select {
   font-family: 'LatoBold', Arial, sans-serif;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -54,31 +54,20 @@ span {
   vertical-align: top;
 }
 
-/* Flat Button @ http://cssdeck.com/labs/beautiful-flat-buttons
-==================================================*/
-.flat-button {
-  position: relative;
-  vertical-align: top;
-  width: 10%;
-  height: 60px;
-  padding: 0;
-  margin: 2px;
-  font-size: 20px;
-  color: white;
-  text-align: center;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-  background: #454545;
-  border: 0;
-  border-bottom: 2px solid #2f2e2e;
-  cursor: pointer;
-  -webkit-box-shadow: inset 0 -2px #2f2e2e;
-  box-shadow: inset 0 -2px #2f2e2e;
+.btn {
+  margin-left: 6px;
 }
-.flat-button:active {
-  top: 1px;
-  outline: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
+
+.js-date-dropdown {
+  margin-left: 6px;
+}
+
+div.select a span.select2-chosen {
+  font-family: 'LatoBold', Arial, sans-serif;
+  letter-spacing: 0;
+  text-transform: uppercase;
+  font-size: 18px;
+  color: white;
 }
 
 /* The Modal (background) */

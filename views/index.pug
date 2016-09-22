@@ -2,22 +2,27 @@ doctype html
 html
   meta(charset='utf-8')
   link(rel='stylesheet', type='text/css', href='css/lato/stylesheet.css')
-  link(rel='stylesheet', type='text/css', href='css/dashboard.css')
   link(rel='stylesheet', type='text/css', href='/src/jquery-ui.css')
-  link(rel='stylesheet', type='text/css', href='/src/MonthPicker.min.css')
-  link(rel='stylesheet' href='//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css')
+  link(rel='stylesheet', href='//netdna.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css')
+  link(rel='stylesheet', type='text/css', href='src/flat-ui.min.css')
+  link(rel='stylesheet', type='text/css', href='css/dashboard.css')
   title Clock Management Dashboard
   body
     h1 Clock Management Dashboard
     #buttons.row
-      span#date 
-        input.js-month-picker(style='width: 0px; height: 0px;')
-      button.flat-button.js-zoom-toggle Toggle Zoom
-      button.flat-button(id='selectButton') Select Graphs
-      a(href='/logout')
-        button.flat-button Logout
-      a(href='/refresh')
-        button.flat-button Refresh Cache
+      .col-xs-3
+        button.btn.btn-primary.btn-lg.btn-block.btn-inverse.js-zoom-toggle Toggle Zoom
+
+        button.btn.btn-primary.btn-lg.btn-block.btn-inverse(id='selectButton') Select Graphs
+        
+        a(href='/logout')
+          button.btn.btn-primary.btn-lg.btn-block.btn-inverse Logout
+        
+        a(href='/refresh')
+          button.btn.btn-primary.btn-lg.btn-block.btn-inverse Refresh Cache
+        
+        select.form-control.select.select-inverse.select-block.js-date-dropdown
+          option(value='') Choose a date
 
     h2.finance
       span.fa.fa-gbp.fa-fw
@@ -185,5 +190,5 @@ html
   script(src='https://www.gstatic.com/charts/loader.js')
   script(src='https://code.jquery.com/jquery-3.1.0.min.js')
   script(src='https://code.jquery.com/ui/1.12.0/jquery-ui.min.js')
-  script(src='/src/MonthPicker.min.js')
+  script(src='/src/flat-ui.min.js')
   script(src='/src/bundle.js')
