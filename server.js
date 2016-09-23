@@ -5,6 +5,7 @@ var express = require('express')
   , session = require('express-session')
   , passportConfig = require('./lib/passport-config')
   , cache = require('./lib/cache-helper')
+  , auth = require('./lib/auth-middleware')
 
 app.use(session({
     secret: process.env.SECRET || 'snakes with hats'
@@ -18,17 +19,6 @@ app.enable('trust proxy')
 
 passportConfig(app)
 
-function isLoggedIn (req, res, next) {
-
-  // if user is authenticated in the session, carry on
-  if (req.isAuthenticated()) {
-    return next()
-  }
-
-  console.log('Redirecting unauthenticated user to login')
-  res.redirect('/auth/google')
-}
-
 app.get('/', function (req, res) {
   if (req.isAuthenticated()) {
     res.redirect('show')
@@ -38,37 +28,45 @@ app.get('/', function (req, res) {
 })
 
 app.get('/login', function (req, res) {
+  log(req)
   res.render('login')
 })
 
 app.get('/logout', function (req, res) {
-  console.log('LOGOUT: email:', req.user.emails[0].value)
+  log(req)
   req.logout()
   res.redirect('/')
 })
 
 app.get('/fail', function (req, res) {
+  log(req)
   res.render('login', { error: true })
 })
 
-app.get('/show', isLoggedIn, function (req, res) {
-  console.log('GET: show from IP', req.ip)
+app.get('/show', auth, function (req, res) {
+  log(req)
   res.render('index')
 })
 
-app.get('/data', isLoggedIn, function (req, res) {
-  console.log('GET: data from IP', req.ip)
+app.get('/data', auth, function (req, res) {
+  log(req)
   cache.get('Data', req, res)
 })
 
-app.get('/targets', isLoggedIn, function (req, res) {
-  console.log('GET: targets from IP', req.ip)
+app.get('/targets', auth, function (req, res) {
+  log(req)
   cache.get('Targets', req, res)
 })
 
-app.get('/refresh', isLoggedIn, function (req, res) {
+app.get('/refresh', auth, function (req, res) {
+  log(req)
   cache.clear(req, res)
 })
+
+function log (req) {
+  console.log('Req for `%s` from IP `%s`', req.path, req.ip)
+  console.log('User: %s', (req.user ? req.user.emails[0].value : 'N/A'))
+}
 
 app.listen(port, function () {
   console.log('Listening on port %d', port)
