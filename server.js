@@ -2,12 +2,9 @@ require('dotenv').load()
 var express = require('express')
   , port = process.env.PORT || 9001
   , app = express()
-  , SheetsHelper = require('./lib/sheets-helper')
-  , spreadsheetId = process.env.SPREADSHEET_ID || ''
   , session = require('express-session')
   , passportConfig = require('./lib/passport-config')
-  , NodeCache = require('node-cache')
-  , cache = new NodeCache({ stdTTL: (12 * 60 * 60) })
+  , cache = require('./lib/cache-helper')
 
 app.use(session({
     secret: process.env.SECRET || 'snakes with hats'
@@ -55,69 +52,22 @@ app.get('/fail', function (req, res) {
 })
 
 app.get('/show', isLoggedIn, function (req, res) {
-  console.log('GET: /show from IP', req.ip)
+  console.log('GET: show from IP', req.ip)
   res.render('index')
 })
 
 app.get('/data', isLoggedIn, function (req, res) {
-  console.log('GET: /data from IP', req.ip)
-  cache.get('data', function (err, data) {
-    if (err) return console.log(err)
-    if (data) {
-      // Use cached data
-      res.status(200).json(data)
-      console.log('GET: /data from IP %s sent cached `data` sheet', req.ip)
-    } else {
-      // Cached data expired/missing, get new
-      SheetsHelper.service.spreadsheets.values.get({
-        spreadsheetId
-        , range: 'Data'
-      }, function sheetReady (err, sheet) {
-        if (err) console.log(err)
-        res.status(200).json(sheet)
-        console.log('GET: /data from IP %s sent `data` sheet', req.ip)
-        cache.set('data', sheet, function (err, result) {
-          if (err || !result) return console.log('Failed to cache `data`, err:', err)
-          else console.log('Cached `data`')
-        })
-      })
-    }
-  })
+  console.log('GET: data from IP', req.ip)
+  cache.get('Data', req, res)
 })
 
 app.get('/targets', isLoggedIn, function (req, res) {
-  console.log('GET: /targets from IP', req.ip)
-  cache.get('targets', function (err, data) {
-    if (err) return console.log(err)
-    if (data) {
-      // Use cached data
-      res.status(200).json(data)
-      console.log('GET: /targets from IP %s sent cached `targets` sheet', req.ip)
-    } else {
-      SheetsHelper.service.spreadsheets.values.get({
-        spreadsheetId
-        , range: 'Targets'
-      }, function sheetReady (err, sheet) {
-        if (err) console.log(err)
-        res.status(200).json(sheet)
-        console.log('GET: /targets from IP %s sent `targets` sheet', req.ip)
-        cache.set('targets', sheet, function (err, result) {
-          if (err || !result) return console.log('Failed to cache `targets`, err:', err)
-          else console.log('Cached `targets`')
-        })
-      })
-    }
-  })
+  console.log('GET: targets from IP', req.ip)
+  cache.get('Targets', req, res)
 })
 
 app.get('/refresh', isLoggedIn, function (req, res) {
-  cache.del([ 'data', 'targets' ], function (err) {
-    if (err) return console.log(err)
-    else {
-      console.log('GET: /refresh from IP %s deleted cached sheets', req.ip)
-      res.redirect('/show')
-    }
-  })
+  cache.clear(req, res)
 })
 
 app.listen(port, function () {
