@@ -1,5 +1,7 @@
 # Mangement Dashboard
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/clocklimited/ManagementDashboard.svg)](https://greenkeeper.io/)
+
 ## Setup
 
 Run `npm install` first.
